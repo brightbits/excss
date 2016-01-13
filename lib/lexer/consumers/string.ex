@@ -1,5 +1,5 @@
-defmodule ExCss.Consumers.String do
-  import ExCss.Consumer
+defmodule ExCss.Lexer.Consumers.String do
+  import ExCss.Lexer.Consumer
 
   def accept(state) do
     char = peek(state)
@@ -18,12 +18,12 @@ defmodule ExCss.Consumers.String do
 
     cond do
       end_of_file?(state.char) || state.char == closing_char ->
-        {state, {:string, content}}
+        {state, {:string, {content}}}
       new_line?(state.char) ->
         state = state
         |> add_warning("String wasn't closed before new line and the new line wasn't escaped")
         |> reconsume
-        {state, {:bad_string, content}}
+        {state, {:bad_string, {content}}}
       state.char == "\\" ->
         {state, char} = state |> consume_escape
         state = state
@@ -41,7 +41,7 @@ defmodule ExCss.Consumers.String do
       new_line?(peek(state)) ->
         {state |> consume, ""}
       true ->
-        state 
+        state
         |> reconsume
         |> consume_escaped_char
     end

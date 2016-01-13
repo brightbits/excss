@@ -8,4 +8,10 @@ defmodule TestHelper do
   def state_for(str, pos) do
     %{str: str, pos: pos, warnings: [], char: String.at(str, pos), line: 0, column: pos, last_line_length: nil}
   end
+
+  @fixtures_path Path.join([File.cwd!, "test", "fixtures"])
+
+  def fixture(filename) do
+    File.read!(Path.join(@fixtures_path, filename))
+  end
 end

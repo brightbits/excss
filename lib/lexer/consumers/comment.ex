@@ -1,5 +1,5 @@
-defmodule ExCss.Consumers.Comment do
-  import ExCss.Consumer
+defmodule ExCss.Lexer.Consumers.Comment do
+  import ExCss.Lexer.Consumer
 
   def accept(state) do
     if peek(state, 1) == "/" && peek(state, 2) == "*" do
@@ -17,9 +17,9 @@ defmodule ExCss.Consumers.Comment do
 
     cond do
       end_of_file?(state.char) ->
-        {state, {:error, "comment wasn't closed before the end of the file"}}
+        {state, {:error, {"comment wasn't closed before the end of the file"}}}
       String.ends_with?(content <> state.char, "*/") ->
-        {state, {:comment, String.slice(content, 0..-2)}}
+        {state, {:comment, {String.slice(content, 0..-2)}}}
       true ->
         consume_until_comment_closes(state, content <> state.char)
     end

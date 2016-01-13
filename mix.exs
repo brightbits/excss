@@ -27,6 +27,9 @@ defmodule ExCss.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:pavlov, ">= 0.1.0", only: :test, github: "mgwidmann/pavlov", branch: "elixir_1.2_support"}]
+    [
+      {:pavlov, ">= 0.1.0", only: :test, github: "mgwidmann/pavlov", branch: "elixir_1.2_support"},
+      {:mix_test_watch, "~> 0.2", only: :dev}
+    ]
   end
 end

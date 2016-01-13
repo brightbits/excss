@@ -1,9 +1,9 @@
-defmodule ExCss.Consumers.Whitespace do
-  import ExCss.Consumer
+defmodule ExCss.Lexer.Consumers.Whitespace do
+  import ExCss.Lexer.Consumer
 
   def accept(state) do
     if whitespace?(peek(state)) do
-      {consume_until_not_whitespace(state), {:whitespace}}
+      {consume_until_not_whitespace(state), {:whitespace, {}}}
     else
       {state, nil}
     end

@@ -6,6 +6,8 @@
 
 https://github.com/tabatkins/parse-css
 
+at: else if(code == 0x5c) { \\ escape outside a string, identlike thing..
+
 rules:
 
 Initial state, we're at -1, so peeking looks at the first character
