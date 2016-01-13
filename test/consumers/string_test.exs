@@ -65,6 +65,14 @@ defmodule ConsumersStringTest do
           expect(new_state.pos) |> to_eq(21)
         end
       end
+
+      context "the string has an escaped hex" do
+        it "returns a string token" do
+          {new_state, token} = ExCss.Consumers.String.accept(TestHelper.state_for("aaa \"this is a \\c582 :)\"", 3))
+          expect(token) |> to_eq({:string, "this is a ł :)"})
+          expect(new_state.pos) |> to_eq(23)
+        end
+      end
     end
   end
 end
