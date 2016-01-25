@@ -1,10 +1,11 @@
 defmodule ExCss.Lexer.Consumers.Colon do
-  import ExCss.Lexer.Consumer
+  alias ExCss.Lexer.Tokens
+  alias ExCss.Lexer.State
 
   def accept(state) do
-    if peek(state) == ":" do
-      state = state |> consume
-      {state, {:colon, {}}}
+    if State.peek(state) == ":" do
+      state = State.consume(state)
+      {state, %Tokens.Colon{}}
     else
       {state, nil}
     end

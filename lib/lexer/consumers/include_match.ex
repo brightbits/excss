@@ -1,14 +1,15 @@
 defmodule ExCss.Lexer.Consumers.IncludeMatch do
-  import ExCss.Lexer.Consumer
+  alias ExCss.Lexer.Tokens
+  alias ExCss.Lexer.State
 
   def accept(state) do
-    if peek(state) == "~" do
-      state = state |> consume
-      if peek(state) == "=" do
-        state = state |> consume
-        {state, {:include_match, {}}}
+    if State.peek(state) == "~" do
+      state = State.consume(state)
+      if State.peek(state) == "=" do
+        state = State.consume(state)
+        {state, %Tokens.IncludeMatch{}}
       else
-        {state, {:delim, {state.char}}}
+        {state, %Tokens.Delim{value: state.grapheme}}
       end
     else
       {state, nil}

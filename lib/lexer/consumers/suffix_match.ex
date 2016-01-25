@@ -1,14 +1,15 @@
 defmodule ExCss.Lexer.Consumers.SuffixMatch do
-  import ExCss.Lexer.Consumer
+  alias ExCss.Lexer.Tokens
+  alias ExCss.Lexer.State
 
   def accept(state) do
-    if peek(state) == "$" do
-      state = state |> consume
-      if peek(state) == "=" do
-        state = state |> consume
-        {state, {:suffix_match, {}}}
+    if State.peek(state) == "$" do
+      state = State.consume(state)
+      if State.peek(state) == "=" do
+        state = State.consume(state)
+        {state, %Tokens.SuffixMatch{}}
       else
-        {state, {:delim, {state.char}}}
+        {state, %Tokens.Delim{value: state.grapheme}}
       end
     else
       {state, nil}

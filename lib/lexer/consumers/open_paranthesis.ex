@@ -1,10 +1,11 @@
 defmodule ExCss.Lexer.Consumers.OpenParenthesis do
-  import ExCss.Lexer.Consumer
+  alias ExCss.Lexer.Tokens
+  alias ExCss.Lexer.State
 
   def accept(state) do
-    if peek(state) == "(" do
-      state = state |> consume
-      {state, {:open_parenthesis, {}}}
+    if State.peek(state) == "(" do
+      state = State.consume(state)
+      {state, %Tokens.OpenParenthesis{}}
     else
       {state, nil}
     end

@@ -1,0 +1,9 @@
+html body > #container .content {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+*:hover {
+  background-color: #ff0000;
+  background-image: transparent url('http://www.google.com/test.png?f=123') no-repeat 50% 10%;
+}

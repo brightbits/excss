@@ -1,10 +1,11 @@
 defmodule ExCss.Lexer.Consumers.OpenCurly do
-  import ExCss.Lexer.Consumer
+  alias ExCss.Lexer.Tokens
+  alias ExCss.Lexer.State
 
   def accept(state) do
-    if peek(state) == "{" do
-      state = state |> consume
-      {state, {:open_curly, {}}}
+    if State.peek(state) == "{" do
+      state = State.consume(state)
+      {state, %Tokens.OpenCurly{}}
     else
       {state, nil}
     end

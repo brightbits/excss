@@ -1,10 +1,11 @@
 defmodule ExCss.Lexer.Consumers.CloseCurly do
-  import ExCss.Lexer.Consumer
+  alias ExCss.Lexer.State
+  alias ExCss.Lexer.Tokens
 
   def accept(state) do
-    if peek(state) == "}" do
-      state = state |> consume
-      {state, {:close_curly, {}}}
+    if State.peek(state) == "}" do
+      state = State.consume(state)
+      {state, %Tokens.CloseCurly{}}
     else
       {state, nil}
     end

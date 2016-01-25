@@ -1,16 +1,17 @@
 defmodule ExCss.Lexer.Consumers.DashMatch do
-  import ExCss.Lexer.Consumer
+  alias ExCss.Lexer.Tokens
+  alias ExCss.Lexer.State
 
   def accept(state) do
-    if peek(state) == "|" do
-      state = state |> consume
+    if State.peek(state) == "|" do
+      state = State.consume(state)
       cond do
-        peek(state) == "=" ->
-          {state |> consume, {:dash_match, {}}}
-        peek(state) == "|" ->
-          {state |> consume, {:column, {}}}
+        State.peek(state) == "=" ->
+          {State.consume(state), %Tokens.DashMatch{}}
+        State.peek(state) == "|" ->
+          {State.consume(state), %Tokens.Column{}}
         true ->
-          {state, {:delim, {"|"}}}
+          {state, %Tokens.Delim{value: "|"}}
       end
     else
       {state, nil}

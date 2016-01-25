@@ -1,53 +1,52 @@
 defmodule ExCss.Lexer do
-  def new(str) do
-    %{str: str, pos: -1, warnings: []}
-  end
+  alias ExCss.Lexer.State
+  alias ExCss.Lexer.Consumers
+  alias ExCss.Lexer.Token
+  alias ExCss.Lexer.Tokens
 
   def next(state) do
     state |> visit_consumers([
-      ExCss.Lexer.Consumers.Comment,
-      ExCss.Lexer.Consumers.Whitespace,
-      ExCss.Lexer.Consumers.String,
-      ExCss.Lexer.Consumers.Hash,
-      ExCss.Lexer.Consumers.SuffixMatch,
-      ExCss.Lexer.Consumers.OpenParenthesis,
-      ExCss.Lexer.Consumers.CloseParenthesis,
-      ExCss.Lexer.Consumers.SubstringMatch,
-      ExCss.Lexer.Consumers.Plus,
-      ExCss.Lexer.Consumers.Comma,
-      ExCss.Lexer.Consumers.Minus,
-      ExCss.Lexer.Consumers.Period,
-      ExCss.Lexer.Consumers.Colon,
-      ExCss.Lexer.Consumers.Semicolon,
-      ExCss.Lexer.Consumers.OpenArrow,
-      ExCss.Lexer.Consumers.At,
-      ExCss.Lexer.Consumers.OpenSquare,
-      ExCss.Lexer.Consumers.LiteralEscape,
-      ExCss.Lexer.Consumers.CloseSquare,
-      ExCss.Lexer.Consumers.PrefixMatch,
-      ExCss.Lexer.Consumers.OpenCurly,
-      ExCss.Lexer.Consumers.DashMatch,
-      ExCss.Lexer.Consumers.CloseCurly,
-      ExCss.Lexer.Consumers.Digits,
-      ExCss.Lexer.Consumers.Ids,
-      ExCss.Lexer.Consumers.Delim
+      Consumers.Comment,
+      Consumers.Whitespace,
+      Consumers.String,
+      Consumers.Hash,
+      Consumers.SuffixMatch,
+      Consumers.OpenParenthesis,
+      Consumers.CloseParenthesis,
+      Consumers.SubstringMatch,
+      Consumers.Plus,
+      Consumers.Comma,
+      Consumers.Minus,
+      Consumers.Period,
+      Consumers.Colon,
+      Consumers.Semicolon,
+      Consumers.OpenArrow,
+      Consumers.At,
+      Consumers.OpenSquare,
+      Consumers.LiteralEscape,
+      Consumers.CloseSquare,
+      Consumers.PrefixMatch,
+      Consumers.OpenCurly,
+      Consumers.DashMatch,
+      Consumers.CloseCurly,
+      Consumers.Digits,
+      Consumers.Ids,
+      Consumers.Delim
     ])
   end
 
-  def do_it(str) do
-    tokens = read_tokens(new(str), [])
-    IO.puts "Token count: #{length(tokens)}"
-    tokens
+  def lex(str) do
+    state = State.new(str)
+    read_tokens(state, [])
   end
 
   defp read_tokens(state, tokens) do
-    {state, {type, _} = token} = next(state)
+    {state, token} = next(state)
 
-    cond do
-      type == :eof ->
-        List.to_tuple(Enum.reverse([token] ++ tokens))
-      true ->
-        read_tokens(state, [token] ++ tokens)
+    if Token.type(token) == Tokens.EndOfFile do
+      List.to_tuple(Enum.reverse([token] ++ tokens))
+    else
+      read_tokens(state, [token] ++ tokens)
     end
   end
 

@@ -1,21 +1,40 @@
 defmodule ExCss.Parser.State do
   defstruct tokens: {}, i: -1, token: nil
-
   @t __MODULE__
 
-  def new(str) do
-    %@t{tokens: ExCss.Lexer.do_it(str)}
+  alias ExCss.Lexer.Token
+  alias ExCss.Lexer.Tokens
+  alias ExCss.Utils.Log
+
+  def new(str) when is_binary(str) do
+    %@t{tokens: ExCss.Lexer.lex(str)}
   end
 
-  def for_declaration(tokens) do
+  def new(tokens) when is_tuple(tokens) do
     %@t{tokens: tokens}
   end
 
-  def currently?(state, type) do
+  def new(tokens) when is_list(tokens) do
+    %@t{tokens: List.to_tuple(tokens)}
+  end
+
+  def debug(state) do
+    IO.puts " DEBUG OF STATE "
+    for i <- Enum.to_list(0..5) do
+      IO.puts Token.to_pretty(elem(state.tokens, state.i + i))
+    end
+  end
+
+  def currently?(state, types) when is_list(types) do
+    types
+    |> Enum.map(fn (type) -> currently?(state, type) end)
+    |> Enum.any?
+  end
+  def currently?(state, type) when is_atom(type) do
     if state.token == nil do
       false
     else
-      elem(state.token, 0) == type
+      Token.type(state.token) == type
     end
   end
 
@@ -23,13 +42,9 @@ defmodule ExCss.Parser.State do
     !currently?(state, type)
   end
 
-  def token_type(state) do
-     elem(state.token, 0)
-  end
-
   def currently_simple_block?(state) do
     try do
-      %ExCss.Parser.SimpleBlock{associated_token: {:open_curly, {}}} = state.token
+      %ExCss.Parser.Nodes.SimpleBlock{associated_token: %Tokens.OpenCurly{}} = state.token
       true
     rescue
       _ in MatchError -> false
@@ -37,10 +52,10 @@ defmodule ExCss.Parser.State do
   end
 
   def token_mirror(state) do
-    case token_type(state) do
-      :open_curly -> :close_curly
-      :open_parenthesis -> :close_parenthesis
-      :open_square -> :close_square
+    case Token.type(state.token) do
+      Tokens.OpenCurly -> Tokens.CloseCurly
+      Tokens.OpenParenthesis -> Tokens.CloseParenthesis
+      Tokens.OpenSquare -> Tokens.CloseSquare
       _ -> raise "unknown token mirror for #{inspect state.token}"
     end
   end
@@ -48,10 +63,19 @@ defmodule ExCss.Parser.State do
   def consume_ignoring_whitespace(state) do
     state = state |> consume
 
-    if state |> currently?(:whitespace) do
+    if state |> currently?(Tokens.Whitespace) do
       consume_ignoring_whitespace(state)
     else
       state
+    end
+  end
+
+  def consume_whitespace(state) do
+    state = state |> consume
+    if state |> currently?(Tokens.Whitespace) do
+      state
+    else
+      state |> reconsume
     end
   end
 
@@ -60,9 +84,9 @@ defmodule ExCss.Parser.State do
     new_state = if new_i < tuple_size(state.tokens) do
       %@t{state | i: new_i, token: elem(state.tokens, new_i)}
     else
-      %@t{state | token: {:eof, {}}}
+      %@t{state | token: %Tokens.EndOfFile{}}
     end
-    IO.puts "CONS: #{inspect new_state.token}"
+    Log.debug "CONS: #{Token.to_pretty(new_state.token)}"
     new_state
   end
 
@@ -75,9 +99,9 @@ defmodule ExCss.Parser.State do
         %@t{state | i: new_i, token: nil}
       end
     else
-      %@t{state | token: {:eof, {}}}
+      %@t{state | token: %Tokens.EndOfFile{}}
     end
-    IO.puts "RECO: #{inspect new_state.token}"
+    #Log.debug "RECO: #{inspect new_state.token}"
     new_state
   end
 end

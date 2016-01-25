@@ -1,14 +1,16 @@
 defmodule ExCss.Lexer.Consumers.Plus do
-  import ExCss.Lexer.Consumer
+  import ExCss.Lexer.Shared
+  alias ExCss.Lexer.Tokens
+  alias ExCss.Lexer.State
 
   def accept(state) do
-    if peek(state) == "+" do
-      state = state |> consume
+    if State.peek(state) == "+" do
+      state = State.consume(state)
 
-      if start_of_number?(state.char, peek(state), peek(state, 2)) do
-        consume_numeric(state |> reconsume)
+      if start_of_number?(state.grapheme, State.peek(state), State.peek(state, 2)) do
+        consume_numeric(State.reconsume(state))
       else
-        {state, {:delim, {"+"}}}
+        {state, %Tokens.Delim{value: "+"}}
       end
     else
       {state, nil}

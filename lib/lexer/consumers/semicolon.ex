@@ -1,10 +1,11 @@
 defmodule ExCss.Lexer.Consumers.Semicolon do
-  import ExCss.Lexer.Consumer
+  alias ExCss.Lexer.Tokens
+  alias ExCss.Lexer.State
 
   def accept(state) do
-    if peek(state) == ";" do
-      state = state |> consume
-      {state, {:semicolon, {}}}
+    if State.peek(state) == ";" do
+      state = State.consume(state)
+      {state, %Tokens.Semicolon{}}
     else
       {state, nil}
     end
