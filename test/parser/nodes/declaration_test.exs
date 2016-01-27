@@ -28,6 +28,26 @@ defmodule ExCss.Parser.Nodes.DeclarationTest do
       end
     end
 
+    context "declaration with single component and no whitespace" do
+      it "parses it correctly" do
+        tokens = [
+          %Tokens.Id{value: "font-weight"},
+          %Tokens.Colon{},
+          %Tokens.Id{value: "bold"}
+        ]
+
+        {_, declaration} = ExCss.Parser.Nodes.Declaration.parse(State.new(tokens))
+
+        expect(declaration) |> to_eq(%ExCss.Parser.Nodes.Declaration{
+          important: false,
+          name: "font-weight",
+          value: [
+            %Tokens.Id{value: "bold"}
+          ]
+        })
+      end
+    end
+
     context "declaration with single component and !important" do
       it "parses it correctly" do
         tokens = [

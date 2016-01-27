@@ -12,19 +12,24 @@ defmodule ExCss.Parser.Nodes.AtRuleTest do
         it "parses it correctly" do
           tokens = [
             %Tokens.AtKeyword{value: "test-123"},
+            %Tokens.Whitespace{},
             %Tokens.Id{value: "test 1"},
+            %Tokens.Whitespace{},
             %Tokens.Id{value: "test 2"},
+            %Tokens.Whitespace{},
             %Tokens.Id{value: "test 3"},
             %Tokens.Semicolon{}
           ]
 
-          {_, function} = ExCss.Parser.Nodes.AtRule.parse(State.new(tokens) |> State.consume)
+          {_, function} = ExCss.Parser.Nodes.AtRule.parse(State.new(tokens))
 
           expect(function) |> to_eq(%ExCss.Parser.Nodes.AtRule{
             name: "test-123",
             prelude: [
               %Tokens.Id{value: "test 1"},
+              %Tokens.Whitespace{},
               %Tokens.Id{value: "test 2"},
+              %Tokens.Whitespace{},
               %Tokens.Id{value: "test 3"}
             ]
           })
@@ -35,18 +40,23 @@ defmodule ExCss.Parser.Nodes.AtRuleTest do
         it "parses it correctly" do
           tokens = [
             %Tokens.AtKeyword{value: "test-123"},
+            %Tokens.Whitespace{},
             %Tokens.Id{value: "test 1"},
+            %Tokens.Whitespace{},
             %Tokens.Id{value: "test 2"},
+            %Tokens.Whitespace{},
             %Tokens.Id{value: "test 3"}
           ]
 
-          {_, function} = ExCss.Parser.Nodes.AtRule.parse(State.new(tokens) |> State.consume)
+          {_, function} = ExCss.Parser.Nodes.AtRule.parse(State.new(tokens))
 
           expect(function) |> to_eq(%ExCss.Parser.Nodes.AtRule{
             name: "test-123",
             prelude: [
               %Tokens.Id{value: "test 1"},
+              %Tokens.Whitespace{},
               %Tokens.Id{value: "test 2"},
+              %Tokens.Whitespace{},
               %Tokens.Id{value: "test 3"}
             ]
           })
@@ -58,14 +68,19 @@ defmodule ExCss.Parser.Nodes.AtRuleTest do
       it "leaves the prelude empty and sets the block correctly" do
         tokens = [
           %Tokens.AtKeyword{value: "test-123"},
+          %Tokens.Whitespace{},
           %Tokens.OpenCurly{},
+          %Tokens.Whitespace{},
           %Tokens.Id{value: "test 1"},
+          %Tokens.Whitespace{},
           %Tokens.Id{value: "test 2"},
+          %Tokens.Whitespace{},
           %Tokens.Id{value: "test 3"},
+          %Tokens.Whitespace{},
           %Tokens.CloseCurly{}
         ]
 
-        {_, function} = ExCss.Parser.Nodes.AtRule.parse(State.new(tokens) |> State.consume)
+        {_, function} = ExCss.Parser.Nodes.AtRule.parse(State.new(tokens))
 
         expect(function) |> to_eq(%ExCss.Parser.Nodes.AtRule{
           name: "test-123",
@@ -74,8 +89,11 @@ defmodule ExCss.Parser.Nodes.AtRuleTest do
             associated_token: %Tokens.OpenCurly{},
             value: [
               %Tokens.Id{value: "test 1"},
+              %Tokens.Whitespace{},
               %Tokens.Id{value: "test 2"},
-              %Tokens.Id{value: "test 3"}
+              %Tokens.Whitespace{},
+              %Tokens.Id{value: "test 3"},
+              %Tokens.Whitespace{}
             ]
           }
         })

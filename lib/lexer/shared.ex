@@ -149,7 +149,7 @@ defmodule ExCss.Lexer.Shared do
         true
       true -> false
     end
-	end
+  end
 
   def consume_numeric(state) do
     {state, {number, number_string}} = consume_number(state)
@@ -243,7 +243,10 @@ defmodule ExCss.Lexer.Shared do
 
   defp consume_hex_number(state) do
     {new_state, content} = consume_hex_number(state, "", 0)
-    {new_state, << String.to_integer(content, 16) :: utf8 >>}
+    padded_content = String.rjust(content, 6, ?0)
+    stripped_content = String.replace(padded_content, ~r{00}, "")
+    char = Base.decode16!(stripped_content, case: :mixed)
+    {new_state, char}
   end
 
   defp consume_hex_number(state, content, count) do

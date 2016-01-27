@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 html body > #container .content {
   font-weight: bold;
   font-size: 14px;
@@ -6,4 +8,23 @@ html body > #container .content {
 *:hover {
   background-color: #ff0000;
   background-image: transparent url('http://www.google.com/test.png?f=123') no-repeat 50% 10%;
+}
+
+@font-face {
+  font-family: 'MyWebFont';
+  src: url('webfont.eot'); /* IE9 Compat Modes */
+  src: url('webfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('webfont.woff2') format('woff2'), /* Super Modern Browsers */
+       url('webfont.woff') format('woff'), /* Pretty Modern Browsers */
+       url('webfont.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('webfont.svg#svgFontName') format('svg'); /* Legacy iOS */
+}
+
+@media only screen
+  and (min-device-width: 320px)
+  and (max-device-width: 480px)
+  and (-webkit-min-device-pixel-ratio: 2) {
+
+    .module { width: 100%; }
+
 }

@@ -29,6 +29,7 @@ defmodule ExCss.Mixfile do
   defp deps do
     [
       {:pavlov, ">= 0.1.0", only: :test, github: "mgwidmann/pavlov", branch: "elixir_1.2_support"},
+      {:credo, "~> 0.2", only: [:dev, :test]},
       {:mix_test_watch, "~> 0.2", only: :dev}
     ]
   end

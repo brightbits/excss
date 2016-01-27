@@ -20,11 +20,11 @@ defmodule ExCss.Lexer.Consumers.Hash do
   defp accept_hash_or_id(state) do
     {state, name} = consume_name(state)
 
-	  token = if start_of_identifier?(String.at(name, 0), String.at(name, 1), String.at(name, 2)) do # fix this shity
+    token = if start_of_identifier?(String.at(name, 0), String.at(name, 1), String.at(name, 2)) do # fix this shity
       %Tokens.Hash{value: name, id: true}
     else
       %Tokens.Hash{value: name, id: false}
-	  end
+    end
 
     {state, token}
   end

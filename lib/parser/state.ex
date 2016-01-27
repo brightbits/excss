@@ -1,27 +1,32 @@
 defmodule ExCss.Parser.State do
-  defstruct tokens: {}, i: -1, token: nil
+  defstruct tokens: {}, i: -1, token: nil, debug: false
   @t __MODULE__
 
   alias ExCss.Lexer.Token
   alias ExCss.Lexer.Tokens
-  alias ExCss.Utils.Log
+  alias ExCss.Parser.Nodes
 
-  def new(str) when is_binary(str) do
-    %@t{tokens: ExCss.Lexer.lex(str)}
+
+  def new(tokens, opts \\ [])
+
+  def new(tokens, opts) when is_tuple(tokens) do
+    consume(%@t{
+      tokens: tokens,
+      debug: opts[:debug]
+    })
   end
 
-  def new(tokens) when is_tuple(tokens) do
-    %@t{tokens: tokens}
+  def new(str, opts) when is_binary(str) do
+    new(ExCss.Lexer.lex(str), opts)
   end
 
-  def new(tokens) when is_list(tokens) do
-    %@t{tokens: List.to_tuple(tokens)}
+  def new(tokens, opts) when is_list(tokens) do
+    new(List.to_tuple(tokens), opts)
   end
 
-  def debug(state) do
-    IO.puts " DEBUG OF STATE "
-    for i <- Enum.to_list(0..5) do
-      IO.puts Token.to_pretty(elem(state.tokens, state.i + i))
+  def debug(state, message) do
+    if state.debug do
+      IO.puts message
     end
   end
 
@@ -35,6 +40,14 @@ defmodule ExCss.Parser.State do
       false
     else
       Token.type(state.token) == type
+    end
+  end
+
+  def currently?(state, type, value) when is_atom(type) do
+    if state.token == nil do
+      false
+    else
+      Token.type(state.token) == type && state.token.value == value
     end
   end
 
@@ -71,11 +84,21 @@ defmodule ExCss.Parser.State do
   end
 
   def consume_whitespace(state) do
-    state = state |> consume
-    if state |> currently?(Tokens.Whitespace) do
-      state
+    if currently?(state, Tokens.Whitespace) do
+      consume(state)
     else
-      state |> reconsume
+      state
+    end
+  end
+
+  def consume_component_value(state) do
+    cond do
+      currently?(state, [Tokens.OpenCurly, Tokens.OpenSquare, Tokens.OpenParenthesis]) ->
+        Nodes.SimpleBlock.parse(state)
+      currently?(state, Tokens.Function) ->
+        Nodes.Function.parse(state)
+      true ->
+        {consume(state), state.token}
     end
   end
 
@@ -86,7 +109,7 @@ defmodule ExCss.Parser.State do
     else
       %@t{state | token: %Tokens.EndOfFile{}}
     end
-    Log.debug "CONS: #{Token.to_pretty(new_state.token)}"
+    debug(new_state, "CONS: #{inspect new_state.token}")
     new_state
   end
 
@@ -101,7 +124,7 @@ defmodule ExCss.Parser.State do
     else
       %@t{state | token: %Tokens.EndOfFile{}}
     end
-    #Log.debug "RECO: #{inspect new_state.token}"
+    debug(new_state, "RECO: #{inspect new_state.token}")
     new_state
   end
 end

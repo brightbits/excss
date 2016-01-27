@@ -13,7 +13,11 @@ defmodule ExCss.Lexer.State do
       nil
     end
 
-    %@t{graphemes: graphemes, i: i, grapheme: grapheme}
+    %@t{
+      graphemes: graphemes,
+      i: i,
+      grapheme: grapheme
+    }
   end
 
   defp preprocess(str) do

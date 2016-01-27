@@ -1,13 +1,21 @@
 defmodule ExCss.Parser.Nodes.Declaration do
-  import ExCss.Utils.PrettyPrint
   alias ExCss.Utils.PrettyPrint
-  alias ExCss.Utils.Log
   alias ExCss.Parser.State
   alias ExCss.Lexer.Tokens
   defstruct name: nil, value: [], important: false
 
-  def pretty_print(_, indent) do
-    pretty_out("Declaration", indent)
+  def pretty_print(declaration, indent) do
+    PrettyPrint.pretty_out("Declaration:", indent)
+    PrettyPrint.pretty_out("Name: #{declaration.name}", indent + 1)
+    if declaration.important do
+      PrettyPrint.pretty_out("Important", indent + 1)
+    end
+
+    PrettyPrint.pretty_out("Value:", indent + 1)
+
+    for token <- declaration.value do
+      PrettyPrint.pretty_out(token, indent + 2)
+    end
   end
 
   def parse(state) do
@@ -15,22 +23,30 @@ defmodule ExCss.Parser.Nodes.Declaration do
   end
 
   defp consume_a_declaration(state) do
-    Log.debug "-- CONSUMING A DECLARATION --"
-    PrettyPrint.tokens(state.tokens)
-    Log.debug "---"
+    state |> State.debug("-- CONSUMING A DECLARATION --")
     # Consume the next input token.
     # While the current input token is a <whitespace-token>, consume the next input token.
     # If the current input token is anything other than a <colon-token>, this is a parse error. Return nothing.
-    state = state |> State.consume_ignoring_whitespace
+    State.debug(state, "currently: #{inspect state.token}, using this for the name")
 
     name = state.token.value
 
-    state = state |> State.consume_ignoring_whitespace
+    state =
+      state
+      |> State.consume # step past the name
+      |> State.consume_whitespace # if current token is whitespace, step past it
+
+    State.debug(state, "currently: #{inspect state.token}, expecting a colon")
 
     if state |> State.not_currently?(Tokens.Colon) do
       {state, nil}
     else
-      state = state |> State.consume_whitespace
+      state =
+        state
+        |> State.consume # step past the colon
+        |> State.consume_whitespace # if current token is whitespace, step past it
+
+      State.debug(state, "consumed colon and whitespace, currently: #{inspect state.token}")
 
       {state, declaration} = consume_a_declaration(state, %ExCss.Parser.Nodes.Declaration{name: name})
 
@@ -39,11 +55,9 @@ defmodule ExCss.Parser.Nodes.Declaration do
     end
   end
   defp consume_a_declaration(state, declaration) do
-    # Otherwise, consume the next input token.
-    #
     # While the current input token is anything other than an <EOF-token>,
     # append it to the declaration’s value and consume the next input token.
-    {state, component_value} = state |> ExCss.Parser.consume_a_component_value
+    {state, component_value} = State.consume_component_value(state)
 
     if component_value != %Tokens.EndOfFile{} do
       declaration = %{declaration | value: [component_value] ++ declaration.value}
@@ -58,7 +72,7 @@ defmodule ExCss.Parser.Nodes.Declaration do
     # Return the declaration.
 
     if length(declaration.value) > 2 do
-      state = State.new(declaration.value) |> State.consume_ignoring_whitespace
+      state = State.new(declaration.value) |> State.consume_whitespace
 
       if State.currently?(state, Tokens.Id) && String.downcase(state.token.value) == "important" do
         state = state |> State.consume

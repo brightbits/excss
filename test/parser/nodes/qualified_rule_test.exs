@@ -4,122 +4,74 @@ defmodule ExCss.Parser.Nodes.QualifiedRuleTest do
 
   alias ExCss.Lexer.Tokens
   alias ExCss.Parser.State
+  alias ExCss.Parser.Nodes
 
-#   Repeatedly consume the next input token:
-#
-# <EOF-token>
-# This is a parse error. Return nothing.
-# <{-token>
-# Consume a simple block and assign it to the qualified rule’s block. Return the qualified rule.
-# simple block with an associated token of <{-token>
-# Assign the block to the qualified rule’s block. Return the qualified rule.
-# anything else
-# Reconsume the current input token. Consume a component value. Append the returned value to the qualified rule’s prelude.
+  # Create a new qualified rule with its prelude initially set to an empty list, and its value initially set to nothing.
+  #
+  # Repeatedly consume the next input token:
+  #
+  # <EOF-token>
+  # This is a parse error. Return nothing.
+  # <{-token>
+  # Consume a simple block and assign it to the qualified rule’s block. Return the qualified rule.
+  # simple block with an associated token of <{-token>
+  # Assign the block to the qualified rule’s block. Return the qualified rule.
+  # anything else
+  # Reconsume the current input token. Consume a component value. Append the returned value to the qualified rule’s prelude.
 
   describe ".parse" do
     context "eof is next" do
       it "returns no qualified rule" do
         tokens = []
 
-        {_, qualified_rule} = ExCss.Parser.Nodes.QualifiedRule.parse(State.new(tokens) |> State.consume)
+        {_, qualified_rule} = ExCss.Parser.Nodes.QualifiedRule.parse(State.new(tokens))
 
         expect(qualified_rule) |> to_be_nil
       end
     end
-    #
-    # context "with {" do
-    #   it "parses it correctly" do
-    #     tokens = [
-    #       %Tokens.OpenCurly{},
-    #       %Tokens.Id{value: "test 1"},
-    #       %Tokens.Id{value: "test 2"},
-    #       %Tokens.Id{value: "test 3"},
-    #       %Tokens.CloseCurly{}
-    #     ]
-    #
-    #     {_, qualified_rule} = ExCss.Parser.Nodes.QualifiedRule.parse(State.new(tokens) |> State.consume)
-    #
-    #     expect(qualified_rule) |> to_eq(%ExCss.Parser.Nodes.QualifiedRule{
-    #       associated_token: %Tokens.OpenCurly{},
-    #       value: [
-    #         %Tokens.Id{value: "test 1"},
-    #         %Tokens.Id{value: "test 2"},
-    #         %Tokens.Id{value: "test 3"}
-    #       ]
-    #     })
-    #   end
-    # end
-    #
-    # context "with [" do
-    #   it "parses it correctly" do
-    #     tokens = [
-    #       %Tokens.OpenSquare{},
-    #       %Tokens.Id{value: "test 1"},
-    #       %Tokens.Id{value: "test 2"},
-    #       %Tokens.Id{value: "test 3"},
-    #       %Tokens.CloseSquare{}
-    #     ]
-    #
-    #     {_, qualified_rule} = ExCss.Parser.Nodes.QualifiedRule.parse(State.new(tokens) |> State.consume)
-    #
-    #     expect(qualified_rule) |> to_eq(%ExCss.Parser.Nodes.QualifiedRule{
-    #       associated_token: %Tokens.OpenSquare{},
-    #       value: [
-    #         %Tokens.Id{value: "test 1"},
-    #         %Tokens.Id{value: "test 2"},
-    #         %Tokens.Id{value: "test 3"}
-    #       ]
-    #     })
-    #   end
-    # end
-    #
-    # context "with (" do
-    #   it "parses it correctly" do
-    #     tokens = [
-    #       %Tokens.OpenParenthesis{},
-    #       %Tokens.Id{value: "test 1"},
-    #       %Tokens.Id{value: "test 2"},
-    #       %Tokens.Id{value: "test 3"},
-    #       %Tokens.CloseParenthesis{}
-    #     ]
-    #
-    #     {_, qualified_rule} = ExCss.Parser.Nodes.QualifiedRule.parse(State.new(tokens) |> State.consume)
-    #
-    #     expect(qualified_rule) |> to_eq(%ExCss.Parser.Nodes.QualifiedRule{
-    #       associated_token: %Tokens.OpenParenthesis{},
-    #       value: [
-    #         %Tokens.Id{value: "test 1"},
-    #         %Tokens.Id{value: "test 2"},
-    #         %Tokens.Id{value: "test 3"}
-    #       ]
-    #     })
-    #   end
-    # end
-    #
-    # context "it doesn't close with its mirror" do
-    #   it "just consumes everything and returns it" do
-    #     tokens = [
-    #       %Tokens.OpenParenthesis{},
-    #       %Tokens.Id{value: "test 1"},
-    #       %Tokens.Id{value: "test 2"},
-    #       %Tokens.CloseSquare{},
-    #       %Tokens.CloseCurly{},
-    #       %Tokens.Id{value: "test 3"}
-    #     ]
-    #
-    #     {_, qualified_rule} = ExCss.Parser.Nodes.QualifiedRule.parse(State.new(tokens) |> State.consume)
-    #
-    #     expect(qualified_rule) |> to_eq(%ExCss.Parser.Nodes.QualifiedRule{
-    #       associated_token: %Tokens.OpenParenthesis{},
-    #       value: [
-    #         %Tokens.Id{value: "test 1"},
-    #         %Tokens.Id{value: "test 2"},
-    #         %Tokens.CloseSquare{},
-    #         %Tokens.CloseCurly{},
-    #         %Tokens.Id{value: "test 3"}
-    #       ]
-    #     })
-    #   end
-    # end
+
+    context "with {" do
+      it "parses it correctly" do
+        tokens = [
+          %Tokens.Whitespace{},
+          %Tokens.Hash{id: true, value: "test"},
+          %Tokens.Whitespace{},
+          %Tokens.Hash{id: true, value: "test2"},
+          %Tokens.Whitespace{},
+          %Tokens.OpenCurly{},
+          %Tokens.Whitespace{},
+          %Tokens.Id{value: "test 1"},
+          %Tokens.Whitespace{},
+          %Tokens.Id{value: "test 2"},
+          %Tokens.Whitespace{},
+          %Tokens.Id{value: "test 3"},
+          %Tokens.Whitespace{},
+          %Tokens.CloseCurly{},
+          %Tokens.Whitespace{}
+        ]
+
+        {_, qualified_rule} = ExCss.Parser.Nodes.QualifiedRule.parse(State.new(tokens))
+
+        expect(qualified_rule) |> to_eq(%ExCss.Parser.Nodes.QualifiedRule{
+          prelude: [
+            %Tokens.Hash{id: true, value: "test"},
+            %Tokens.Whitespace{},
+            %Tokens.Hash{id: true, value: "test2"},
+            %Tokens.Whitespace{}
+          ],
+          block: %Nodes.SimpleBlock{
+            associated_token: %Tokens.OpenCurly{},
+            value: [
+              %Tokens.Id{value: "test 1"},
+              %Tokens.Whitespace{},
+              %Tokens.Id{value: "test 2"},
+              %Tokens.Whitespace{},
+              %Tokens.Id{value: "test 3"},
+              %Tokens.Whitespace{}
+            ]
+          }
+        })
+      end
+    end
   end
 end

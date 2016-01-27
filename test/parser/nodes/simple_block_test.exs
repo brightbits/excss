@@ -16,7 +16,7 @@ defmodule ExCss.Parser.Nodes.SimpleBlockTest do
           %Tokens.CloseCurly{}
         ]
 
-        {_, simple_block} = ExCss.Parser.Nodes.SimpleBlock.parse(State.new(tokens) |> State.consume)
+        {state, simple_block} = ExCss.Parser.Nodes.SimpleBlock.parse(State.new(tokens))
 
         expect(simple_block) |> to_eq(%ExCss.Parser.Nodes.SimpleBlock{
           associated_token: %Tokens.OpenCurly{},
@@ -26,6 +26,8 @@ defmodule ExCss.Parser.Nodes.SimpleBlockTest do
             %Tokens.Id{value: "test 3"}
           ]
         })
+
+        expect(state.token) |> to_eq(%Tokens.EndOfFile{})
       end
     end
 
@@ -39,7 +41,7 @@ defmodule ExCss.Parser.Nodes.SimpleBlockTest do
           %Tokens.CloseSquare{}
         ]
 
-        {_, simple_block} = ExCss.Parser.Nodes.SimpleBlock.parse(State.new(tokens) |> State.consume)
+        {_, simple_block} = ExCss.Parser.Nodes.SimpleBlock.parse(State.new(tokens))
 
         expect(simple_block) |> to_eq(%ExCss.Parser.Nodes.SimpleBlock{
           associated_token: %Tokens.OpenSquare{},
@@ -62,7 +64,7 @@ defmodule ExCss.Parser.Nodes.SimpleBlockTest do
           %Tokens.CloseParenthesis{}
         ]
 
-        {_, simple_block} = ExCss.Parser.Nodes.SimpleBlock.parse(State.new(tokens) |> State.consume)
+        {_, simple_block} = ExCss.Parser.Nodes.SimpleBlock.parse(State.new(tokens))
 
         expect(simple_block) |> to_eq(%ExCss.Parser.Nodes.SimpleBlock{
           associated_token: %Tokens.OpenParenthesis{},
@@ -86,7 +88,7 @@ defmodule ExCss.Parser.Nodes.SimpleBlockTest do
           %Tokens.Id{value: "test 3"}
         ]
 
-        {_, simple_block} = ExCss.Parser.Nodes.SimpleBlock.parse(State.new(tokens) |> State.consume)
+        {_, simple_block} = ExCss.Parser.Nodes.SimpleBlock.parse(State.new(tokens))
 
         expect(simple_block) |> to_eq(%ExCss.Parser.Nodes.SimpleBlock{
           associated_token: %Tokens.OpenParenthesis{},
