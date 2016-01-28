@@ -6,7 +6,7 @@ defmodule ExCss.Parser.Nodes.TypeSelector do
   defstruct value: nil
 
   def pretty_print(selector, indent) do
-    PrettyPrint.pretty_out("Type Selector: #{selector.tag}", indent)
+    PrettyPrint.pretty_out("Type Selector: #{selector.value}", indent)
   end
 
   def parse(state) do

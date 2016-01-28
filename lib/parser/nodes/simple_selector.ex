@@ -9,10 +9,11 @@ defmodule ExCss.Parser.Nodes.SimpleSelector do
   alias ExCss.Parser.State
   alias ExCss.Parser.Nodes
   alias ExCss.Lexer.Tokens
-  defstruct value: nil, modifiers: []
+  defstruct value: nil, modifiers: {}
 
   def pretty_print(selector, indent) do
-    PrettyPrint.pretty_out("Simple Selector: #{selector.tag}", indent)
+    PrettyPrint.pretty_out("Simple Selector:", indent)
+    PrettyPrint.pretty_out(selector.value, indent + 1)
   end
 
   def parse(state) do
@@ -38,7 +39,7 @@ defmodule ExCss.Parser.Nodes.SimpleSelector do
     if value do
       {state, %{selector | value: value, modifiers: modifiers}} # [ HASH | class | attrib | pseudo | negation ]*
     else
-      if length(modifiers) > 0 do # | [ HASH | class | attrib | pseudo | negation ]+
+      if tuple_size(modifiers) > 0 do # | [ HASH | class | attrib | pseudo | negation ]+
         {state, %{selector | value: %Nodes.UniversalSelector{}, modifiers: modifiers}}
       else
         {state, nil}
@@ -50,8 +51,12 @@ defmodule ExCss.Parser.Nodes.SimpleSelector do
     {state, modifier} = consume_modifier(state)
 
     if modifier do
-      consume_some_modifiers(state, modifiers ++ [modifier])
+      consume_some_modifiers(state, [modifier] ++ modifiers)
     else
+      modifiers =
+        modifiers
+        |> Enum.reverse
+        |> List.to_tuple
       {state, modifiers}
     end
   end

@@ -25,13 +25,13 @@ defmodule ExCss.Parser.Nodes.AtRuleTest do
 
           expect(function) |> to_eq(%ExCss.Parser.Nodes.AtRule{
             name: "test-123",
-            prelude: [
+            prelude: {
               %Tokens.Id{value: "test 1"},
               %Tokens.Whitespace{},
               %Tokens.Id{value: "test 2"},
               %Tokens.Whitespace{},
               %Tokens.Id{value: "test 3"}
-            ]
+            }
           })
         end
       end
@@ -52,13 +52,13 @@ defmodule ExCss.Parser.Nodes.AtRuleTest do
 
           expect(function) |> to_eq(%ExCss.Parser.Nodes.AtRule{
             name: "test-123",
-            prelude: [
+            prelude: {
               %Tokens.Id{value: "test 1"},
               %Tokens.Whitespace{},
               %Tokens.Id{value: "test 2"},
               %Tokens.Whitespace{},
               %Tokens.Id{value: "test 3"}
-            ]
+            }
           })
         end
       end
@@ -84,17 +84,17 @@ defmodule ExCss.Parser.Nodes.AtRuleTest do
 
         expect(function) |> to_eq(%ExCss.Parser.Nodes.AtRule{
           name: "test-123",
-          prelude: [],
+          prelude: {},
           block: %Nodes.SimpleBlock{
             associated_token: %Tokens.OpenCurly{},
-            value: [
+            value: {
               %Tokens.Id{value: "test 1"},
               %Tokens.Whitespace{},
               %Tokens.Id{value: "test 2"},
               %Tokens.Whitespace{},
               %Tokens.Id{value: "test 3"},
               %Tokens.Whitespace{}
-            ]
+            }
           }
         })
       end

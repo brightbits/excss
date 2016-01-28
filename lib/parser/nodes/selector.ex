@@ -9,7 +9,8 @@ defmodule ExCss.Parser.Nodes.Selector do
   defstruct value: nil
 
   def pretty_print(selector, indent) do
-    PrettyPrint.pretty_out("Selector: #{selector.value}", indent)
+    PrettyPrint.pretty_out("Selector:", indent)
+    PrettyPrint.pretty_out(selector.value, indent + 1)
   end
 
   def parse(state) do
@@ -18,14 +19,14 @@ defmodule ExCss.Parser.Nodes.Selector do
     {state, simple_selector} = Nodes.SimpleSelector.parse(state)
 
     if simple_selector do
-      {state, combinators} = consume_combinators_with_simple_selector(state, simple_selector)
+      {state, combinators} = consume_combinators(state, simple_selector)
       {state, %Nodes.Selector{value: combinators}}
     else
       {state, nil}
     end
   end
 
-  defp consume_combinators_with_simple_selector(state, simple_selector) do
+  defp consume_combinators(state, simple_selector) do
     state |> State.debug("before comb: #{inspect state.token}")
     {state, combinator} = Nodes.Combinator.parse(state)
 

@@ -71,12 +71,25 @@ defmodule ExCss.Parser.Nodes.Pseudo do
     end
   end
 
-  defp consume_expression(state, components \\ []) do # [
+  defp consume_expression(state) do
+    {state, components} = consume_expression(state, [])
+
+    if components do
+      components =
+        components
+        |> Enum.reverse
+        |> List.to_tuple
+    end
+    
+    {state, components}
+  end
+
+  defp consume_expression(state, components) do # [
     State.debug(state, "In an expression, currently: #{inspect state.token}")
     {state, component} = consume_an_expression_component(state) # [ PLUS | '-' | DIMENSION | NUMBER | STRING | IDENT ]
     if component do
       State.debug(state, "Got component #{inspect component}, adding to #{inspect components}")
-      components = components ++ [component]
+      components = [component] ++ components
       state = State.consume_whitespace(state) # S*
       # ]
       {new_state, more_components} = consume_expression(state, components) # +

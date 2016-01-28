@@ -21,9 +21,9 @@ defmodule ExCss.Parser.Nodes.DeclarationTest do
         expect(declaration) |> to_eq(%ExCss.Parser.Nodes.Declaration{
           important: false,
           name: "font-weight",
-          value: [
+          value: {
             %Tokens.Id{value: "bold"}
-          ]
+          }
         })
       end
     end
@@ -41,9 +41,9 @@ defmodule ExCss.Parser.Nodes.DeclarationTest do
         expect(declaration) |> to_eq(%ExCss.Parser.Nodes.Declaration{
           important: false,
           name: "font-weight",
-          value: [
+          value: {
             %Tokens.Id{value: "bold"}
-          ]
+          }
         })
       end
     end
@@ -66,10 +66,10 @@ defmodule ExCss.Parser.Nodes.DeclarationTest do
         expect(declaration) |> to_eq(%ExCss.Parser.Nodes.Declaration{
           important: true,
           name: "font-weight",
-          value: [
+          value: {
             %Tokens.Id{value: "bold"},
             %Tokens.Whitespace{}
-          ]
+          }
         })
       end
     end
@@ -93,13 +93,13 @@ defmodule ExCss.Parser.Nodes.DeclarationTest do
         expect(declaration) |> to_eq(%ExCss.Parser.Nodes.Declaration{
           important: false,
           name: "border",
-          value: [
+          value: {
             %Tokens.Id{value: "solid"},
             %Tokens.Whitespace{},
             %Tokens.Dimension{value: 1, unit: "px", original_value: "1"},
             %Tokens.Whitespace{},
             %Tokens.Hash{id: false, value: "0f0f0f"}
-          ]
+          }
         })
       end
     end
@@ -127,14 +127,14 @@ defmodule ExCss.Parser.Nodes.DeclarationTest do
         expect(declaration) |> to_eq(%ExCss.Parser.Nodes.Declaration{
           important: true,
           name: "border",
-          value: [
+          value: {
             %Tokens.Id{value: "solid"},
             %Tokens.Whitespace{},
             %Tokens.Dimension{value: 1, unit: "px", original_value: "1"},
             %Tokens.Whitespace{},
             %Tokens.Hash{id: false, value: "0f0f0f"},
             %Tokens.Whitespace{}
-          ]
+          }
         })
       end
     end

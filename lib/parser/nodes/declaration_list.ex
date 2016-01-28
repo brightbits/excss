@@ -4,7 +4,7 @@ defmodule ExCss.Parser.Nodes.DeclarationList do
   alias ExCss.Parser.Nodes
   alias ExCss.Lexer.Token
   alias ExCss.Lexer.Tokens
-  defstruct value: []
+  defstruct value: {}
 
   def pretty_print(declaration_list, indent) do
     PrettyPrint.pretty_out("Declaration List:", indent)
@@ -20,7 +20,13 @@ defmodule ExCss.Parser.Nodes.DeclarationList do
   defp consume_a_list_of_declarations(state) do
     state |> State.debug("-- CONSUMING A LIST OF DECLARATIONS --")
     {state, list} = consume_a_list_of_declarations(state, [])
-    {state, List.to_tuple(list)}
+
+    list =
+      list
+      |> Enum.reverse
+      |> List.to_tuple
+
+    {state, list}
   end
   defp consume_a_list_of_declarations(state, declarations) do
     # Create an initially empty list of declarations.
@@ -49,9 +55,11 @@ defmodule ExCss.Parser.Nodes.DeclarationList do
         {state, declarations}
       Tokens.Semicolon ->
         consume_a_list_of_declarations(State.consume(state), declarations)
+      Tokens.Comment ->
+        consume_a_list_of_declarations(State.consume(state), declarations)
       Tokens.AtKeyword ->
         {state, at_rule} = Nodes.AtRule.parse(state)
-        consume_a_list_of_declarations(state, declarations ++ [at_rule])
+        consume_a_list_of_declarations(state, [at_rule] ++ declarations)
       Tokens.Id ->
         {state, temp_list} = consume_temp_list_for_declaration(state)
 
@@ -60,7 +68,7 @@ defmodule ExCss.Parser.Nodes.DeclarationList do
         {_, declaration} = Nodes.Declaration.parse(temp_state)
 
         if declaration do
-          declarations = declarations ++ [declaration]
+          declarations = [declaration] ++ declarations
         end
 
         consume_a_list_of_declarations(state, declarations)

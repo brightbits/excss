@@ -4,7 +4,7 @@ defmodule ExCss.Parser.Nodes.RuleList do
   alias ExCss.Parser.Nodes
   alias ExCss.Lexer.Token
   alias ExCss.Lexer.Tokens
-  defstruct rules: []
+  defstruct rules: {}
 
   def pretty_print(rule_list, indent) do
     PrettyPrint.pretty_out("Rule List:", indent)
@@ -14,13 +14,20 @@ defmodule ExCss.Parser.Nodes.RuleList do
 
   def parse(state, top_level \\ false) do
     {state, rules} = consume_a_list_of_rules(state, top_level)
+
     {state, %Nodes.RuleList{rules: rules}}
   end
 
   defp consume_a_list_of_rules(state, top_level) do
     state |> State.debug("-- CONSUMING A LIST OF RULES --")
     {state, list} = consume_a_list_of_rules(state, top_level, [])
-    {state, List.to_tuple(list)}
+
+    list =
+      list
+      |> Enum.reverse
+      |> List.to_tuple
+
+    {state, list}
   end
   defp consume_a_list_of_rules(state, top_level, rules) do
     # Create an initially empty list of rules.
@@ -41,7 +48,7 @@ defmodule ExCss.Parser.Nodes.RuleList do
     # anything else
     # Reconsume the current input token. Consume a qualified rule. If anything is returned, append it to the list of rules.
 
-    state = state |> State.consume_ignoring_whitespace
+    state = state |> State.consume_whitespace
     token_type = Token.type(state.token)
     cond do
       token_type == Tokens.EndOfFile ->
@@ -52,7 +59,7 @@ defmodule ExCss.Parser.Nodes.RuleList do
           |> State.reconsume
           |> Nodes.QualifiedRule.parse
 
-          rules = rules ++ [qualified_rule]
+          rules = [qualified_rule] ++ rules
         end
 
         consume_a_list_of_rules(state, top_level, rules)
@@ -62,7 +69,7 @@ defmodule ExCss.Parser.Nodes.RuleList do
         |> Nodes.AtRule.parse
 
         if at_rule do
-          rules = rules ++ [at_rule]
+          rules = [at_rule] ++ rules
         end
 
         consume_a_list_of_rules(state, top_level, rules)
@@ -73,7 +80,7 @@ defmodule ExCss.Parser.Nodes.RuleList do
         |> Nodes.QualifiedRule.parse
 
         if qualified_rule do
-          rules = rules ++ [qualified_rule]
+          rules = [qualified_rule] ++ rules
         end
 
         consume_a_list_of_rules(state, top_level, rules)

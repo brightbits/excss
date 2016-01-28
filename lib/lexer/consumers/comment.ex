@@ -20,9 +20,9 @@ defmodule ExCss.Lexer.Consumers.Comment do
 
     cond do
       end_of_file?(state.grapheme) ->
-        {state, {:error, {"comment wasn't closed before the end of the file"}}} #TODO: no returning error token?
+        {state, nil}
       String.ends_with?(content <> state.grapheme, "*/") ->
-        {state, %Tokens.Comment{value: String.slice(content, 0..-2)}}
+        {state, nil}
       true ->
         consume_until_comment_closes(state, content <> state.grapheme)
     end

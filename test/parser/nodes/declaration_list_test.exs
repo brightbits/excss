@@ -25,9 +25,9 @@ defmodule ExCss.Parser.Nodes.DeclarationListTest do
               %Nodes.Declaration{
                 important: false,
                 name: "font-weight",
-                value: [
+                value: {
                   %Tokens.Id{value: "bold"}
-                ]
+                }
               }
             }
           })
@@ -52,9 +52,9 @@ defmodule ExCss.Parser.Nodes.DeclarationListTest do
               %Nodes.Declaration{
                 important: false,
                 name: "font-weight",
-                value: [
+                value: {
                   %Tokens.Id{value: "bold"}
-                ]
+                }
               }
             }
           })
@@ -97,14 +97,14 @@ defmodule ExCss.Parser.Nodes.DeclarationListTest do
           value: {
             %Nodes.AtRule{
               name: "font-face",
-              prelude: [],
+              prelude: {},
               block: %Nodes.SimpleBlock{
                 associated_token: %Tokens.OpenCurly{},
-                value: [
+                value: {
                   %Tokens.Colon{},
                   %Tokens.Whitespace{},
                   %Tokens.Id{value: "test"}
-                ]
+                }
               }
             }
           }
@@ -133,16 +133,16 @@ defmodule ExCss.Parser.Nodes.DeclarationListTest do
               %Nodes.Declaration{
                 important: false,
                 name: "font-weight",
-                value: [
+                value: {
                   %Tokens.Id{value: "bold"}
-                ]
+                }
               },
               %Nodes.Declaration{
                 important: false,
                 name: "font-size",
-                value: [
+                value: {
                   %Tokens.Dimension{value: 12, original_value: "12", unit: "px"}
-                ]
+                }
               }
             }
           })
@@ -170,16 +170,16 @@ defmodule ExCss.Parser.Nodes.DeclarationListTest do
               %Nodes.Declaration{
                 important: false,
                 name: "font-weight",
-                value: [
+                value: {
                   %Tokens.Id{value: "bold"}
-                ]
+                }
               },
               %Nodes.Declaration{
                 important: false,
                 name: "font-size",
-                value: [
+                value: {
                   %Tokens.Dimension{value: 12, original_value: "12", unit: "px"}
-                ]
+                }
               }
             }
           })
@@ -209,16 +209,16 @@ defmodule ExCss.Parser.Nodes.DeclarationListTest do
               %Nodes.Declaration{
                 important: false,
                 name: "font-weight",
-                value: [
+                value: {
                   %Tokens.Id{value: "bold"}
-                ]
+                }
               },
               %Nodes.Declaration{
                 important: false,
                 name: "font-size",
-                value: [
+                value: {
                   %Tokens.Dimension{value: 12, original_value: "12", unit: "px"}
-                ]
+                }
               }
             }
           })
@@ -250,18 +250,18 @@ defmodule ExCss.Parser.Nodes.DeclarationListTest do
               %Nodes.Declaration{
                 important: false,
                 name: "font-weight",
-                value: [
+                value: {
                   %Tokens.Id{value: "bold"}
-                ]
+                }
               },
               %Nodes.Declaration{
                 important: false,
                 name: "border",
-                value: [
+                value: {
                   %Tokens.Id{value: "solid"},
                   %Tokens.Dimension{value: 1, unit: "px", original_value: "1"},
                   %Tokens.Hash{value: "ff0000"}
-                ]
+                }
               }
             }
           })

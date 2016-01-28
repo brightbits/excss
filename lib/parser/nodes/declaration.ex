@@ -2,7 +2,7 @@ defmodule ExCss.Parser.Nodes.Declaration do
   alias ExCss.Utils.PrettyPrint
   alias ExCss.Parser.State
   alias ExCss.Lexer.Tokens
-  defstruct name: nil, value: [], important: false
+  defstruct name: nil, value: {}, important: false
 
   def pretty_print(declaration, indent) do
     PrettyPrint.pretty_out("Declaration:", indent)
@@ -13,7 +13,7 @@ defmodule ExCss.Parser.Nodes.Declaration do
 
     PrettyPrint.pretty_out("Value:", indent + 1)
 
-    for token <- declaration.value do
+    for token <- Tuple.to_list(declaration.value) do
       PrettyPrint.pretty_out(token, indent + 2)
     end
   end
@@ -48,9 +48,14 @@ defmodule ExCss.Parser.Nodes.Declaration do
 
       State.debug(state, "consumed colon and whitespace, currently: #{inspect state.token}")
 
-      {state, declaration} = consume_a_declaration(state, %ExCss.Parser.Nodes.Declaration{name: name})
+      {state, declaration} = consume_a_declaration(state, %ExCss.Parser.Nodes.Declaration{name: name, value: []})
 
-      declaration = %{declaration | value: Enum.reverse(declaration.value)}
+      value =
+        declaration.value
+        |> Enum.reverse
+        |> List.to_tuple
+
+      declaration = %{declaration | value: value}
       {state, declaration}
     end
   end

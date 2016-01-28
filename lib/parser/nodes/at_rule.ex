@@ -3,7 +3,7 @@ defmodule ExCss.Parser.Nodes.AtRule do
   alias ExCss.Parser.Nodes
   alias ExCss.Parser.State
   alias ExCss.Lexer.Tokens
-  defstruct name: nil, prelude: [], block: nil
+  defstruct name: nil, prelude: {}, block: nil
 
   def pretty_print(at_rule, indent) do
     PrettyPrint.pretty_out("At Rule:", indent)
@@ -28,7 +28,7 @@ defmodule ExCss.Parser.Nodes.AtRule do
       |> State.consume # step over AtToken
       |> State.consume_whitespace # if the current token is whitespace, step over it
 
-    consume_an_at_rule(state, %ExCss.Parser.Nodes.AtRule{name: name})
+    consume_an_at_rule(state, %ExCss.Parser.Nodes.AtRule{name: name, prelude: []})
   end
   defp consume_an_at_rule(state, rule) do
     # Create a new at-rule with its name set to the value of the current input token,
@@ -48,13 +48,23 @@ defmodule ExCss.Parser.Nodes.AtRule do
 
     cond do
       State.currently?(state, [Tokens.EndOfFile, Tokens.Semicolon]) ->
-        {State.consume(state), rule}
+        {State.consume(state), process_prelude(rule)}
+
       State.currently?(state, Tokens.OpenCurly) ->
         {state, simple_block} = Nodes.SimpleBlock.parse(state)
-        {state, %{rule | block: simple_block}}
+        {state, process_prelude(%{rule | block: simple_block})}
       true ->
         {state, component_value} = State.consume_component_value(state)
-        consume_an_at_rule(state, %{rule | prelude: rule.prelude ++ [component_value]})
+        consume_an_at_rule(state, %{rule | prelude: [component_value] ++ rule.prelude})
     end
+  end
+
+  defp process_prelude(rule) do
+    prelude =
+      rule.prelude
+      |> Enum.reverse
+      |> List.to_tuple
+
+    %{rule | prelude: prelude}
   end
 end

@@ -20,11 +20,11 @@ defmodule ExCss.Parser.Nodes.FunctionTest do
 
         expect(function) |> to_eq(%ExCss.Parser.Nodes.Function{
           name: "test-123",
-          value: [
+          value: {
             %Tokens.Id{value: "test 1"},
             %Tokens.Id{value: "test 2"},
             %Tokens.Id{value: "test 3"}
-          ]
+          }
         })
       end
     end
@@ -42,11 +42,11 @@ defmodule ExCss.Parser.Nodes.FunctionTest do
 
         expect(simple_block) |> to_eq(%ExCss.Parser.Nodes.Function{
           name: "test-123",
-          value: [
+          value: {
             %Tokens.Id{value: "test 1"},
             %Tokens.Id{value: "test 2"},
             %Tokens.Id{value: "test 3"}
-          ]
+          }
         })
       end
     end

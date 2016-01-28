@@ -4,12 +4,15 @@ defmodule ExCss.Parser.Nodes.QualifiedRule do
   alias ExCss.Parser.Nodes
   alias ExCss.Lexer.Tokens
 
-  defstruct prelude: [], block: nil
+  defstruct prelude: {}, block: nil
 
   def pretty_print(qualified_rule, indent) do
     PrettyPrint.pretty_out("Qualified Rule:", indent)
     PrettyPrint.pretty_out("Prelude:", indent + 1)
-    PrettyPrint.pretty_out(qualified_rule.prelude, indent + 2)
+
+    state = ExCss.Parser.State.new(qualified_rule.prelude)
+    {_, selector} = Nodes.Selector.parse(state)
+    PrettyPrint.pretty_out(selector, indent + 2)
 
     state = ExCss.Parser.State.new(qualified_rule.block.value)
     {_, declaration_list} = Nodes.DeclarationList.parse(state)
@@ -23,7 +26,19 @@ defmodule ExCss.Parser.Nodes.QualifiedRule do
   defp consume_a_qualified_rule(state) do
     state |> State.debug("-- CONSUMING A QUALIFIED RULE --")
     state = State.consume_whitespace(state)
-    consume_a_qualified_rule(state, %Nodes.QualifiedRule{})
+
+    {state, rule} = consume_a_qualified_rule(state, %Nodes.QualifiedRule{prelude: []})
+
+    if rule do
+      prelude =
+        rule.prelude
+        |> Enum.reverse
+        |> List.to_tuple
+
+      {state, %{rule | prelude: prelude}}
+    else
+      {state, rule}
+    end
   end
   defp consume_a_qualified_rule(state, rule) do
     # Create a new qualified rule with its prelude initially set to an empty list, and its value initially set to nothing.
@@ -51,7 +66,7 @@ defmodule ExCss.Parser.Nodes.QualifiedRule do
         true ->
           {state, component_value} = State.consume_component_value(state)
 
-          consume_a_qualified_rule(state, %{rule | prelude: rule.prelude ++ [component_value]})
+          consume_a_qualified_rule(state, %{rule | prelude: [component_value] ++ rule.prelude})
       end
     end
   end

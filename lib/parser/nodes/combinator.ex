@@ -6,7 +6,7 @@ defmodule ExCss.Parser.Nodes.Combinator do
   defstruct type: nil, left: nil, right: nil
 
   def pretty_print(combinator, indent) do
-    PrettyPrint.pretty_out("Combinator:", indent)
+    PrettyPrint.pretty_out("Combinator #{combinator.type}", indent)
     PrettyPrint.pretty_out("Left:", indent + 1)
     PrettyPrint.pretty_out(combinator.left, indent + 2)
     PrettyPrint.pretty_out("Right:", indent + 1)

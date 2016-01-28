@@ -70,14 +70,14 @@ defmodule ExCss.Parser.Nodes.PseudoTest do
         expect(pseudo) |> to_eq(%Nodes.Pseudo{
           value: "test",
           type: :function,
-          function: [
+          function: {
             %Tokens.Delim{value: "+"},
             %Tokens.Delim{value: "-"},
             %Tokens.Dimension{value: 123, unit: "em"},
             %Tokens.Number{value: 123},
             %Tokens.String{value: "Hello!"},
             %Tokens.Id{value: "testing"}
-          ]
+          }
         })
       end
 

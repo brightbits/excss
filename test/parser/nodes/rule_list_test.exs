@@ -10,6 +10,11 @@ defmodule ExCss.Parser.Nodes.RuleListTest do
     context "a few rules" do
       it "parses them correctly" do
         tokens = [
+          %Tokens.AtKeyword{value: "charset"},
+          %Tokens.Whitespace{},
+          %Tokens.OpenCurly{},
+          %Tokens.Id{value: "Hey!"},
+          %Tokens.CloseCurly{},
           %Tokens.Whitespace{},
           %Tokens.Hash{id: true, value: "test-123"},
           %Tokens.Whitespace{},
@@ -42,25 +47,35 @@ defmodule ExCss.Parser.Nodes.RuleListTest do
 
         expect(rule_list) |> to_eq(%Nodes.RuleList{
           rules: {
+            %Nodes.AtRule{
+              name: "charset",
+              prelude: {},
+              block: %Nodes.SimpleBlock{
+                associated_token: %Tokens.OpenCurly{},
+                value: {
+                  %Tokens.Id{value: "Hey!"}
+                }
+              }
+            },
             %Nodes.QualifiedRule{
-              prelude: [
+              prelude: {
                 %Tokens.Hash{id: true, value: "test-123"},
                 %Tokens.Whitespace{},
                 %Tokens.Id{value: "test 1"},
                 %Tokens.Whitespace{},
                 %Tokens.Id{value: "test 3"},
                 %Tokens.Whitespace{}
-              ],
+              },
               block: %Nodes.SimpleBlock{
                 associated_token: %Tokens.OpenCurly{},
-                value: [
+                value: {
                   %Tokens.Id{value: "something"},
                   %Tokens.Whitespace{},
-                ]
+                }
               }
             },
             %Nodes.QualifiedRule{
-              prelude: [
+              prelude: {
                 %Tokens.Hash{id: true, value: "test-123"},
                 %Tokens.Whitespace{},
                 %Tokens.Delim{value: "."},
@@ -69,13 +84,13 @@ defmodule ExCss.Parser.Nodes.RuleListTest do
                 %Tokens.Delim{value: "."},
                 %Tokens.Id{value: "test 3"},
                 %Tokens.Whitespace{}
-              ],
+              },
               block: %Nodes.SimpleBlock{
                 associated_token: %Tokens.OpenCurly{},
-                value: [
+                value: {
                   %Tokens.Id{value: "something-else"},
                   %Tokens.Whitespace{}
-                ]
+                }
               }
             }
           }

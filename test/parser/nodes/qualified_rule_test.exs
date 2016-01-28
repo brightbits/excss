@@ -53,22 +53,22 @@ defmodule ExCss.Parser.Nodes.QualifiedRuleTest do
         {_, qualified_rule} = ExCss.Parser.Nodes.QualifiedRule.parse(State.new(tokens))
 
         expect(qualified_rule) |> to_eq(%ExCss.Parser.Nodes.QualifiedRule{
-          prelude: [
+          prelude: {
             %Tokens.Hash{id: true, value: "test"},
             %Tokens.Whitespace{},
             %Tokens.Hash{id: true, value: "test2"},
             %Tokens.Whitespace{}
-          ],
+          },
           block: %Nodes.SimpleBlock{
             associated_token: %Tokens.OpenCurly{},
-            value: [
+            value: {
               %Tokens.Id{value: "test 1"},
               %Tokens.Whitespace{},
               %Tokens.Id{value: "test 2"},
               %Tokens.Whitespace{},
               %Tokens.Id{value: "test 3"},
               %Tokens.Whitespace{}
-            ]
+            }
           }
         })
       end

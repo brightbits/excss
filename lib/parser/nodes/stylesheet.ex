@@ -6,9 +6,9 @@ defmodule ExCss.Parser.Nodes.Stylesheet do
 
   def pretty_print(stylesheet), do: pretty_print(stylesheet, 0)
   def pretty_print(stylesheet, indent) do
-    #PrettyPrint.pretty_out("Stylesheet:", indent)
-    #PrettyPrint.pretty_out("Value:", indent + 1)
-    #PrettyPrint.pretty_out(stylesheet.value, indent + 2)
+    PrettyPrint.pretty_out("Stylesheet:", indent)
+    PrettyPrint.pretty_out("Value:", indent + 1)
+    PrettyPrint.pretty_out(stylesheet.value, indent + 2)
   end
 
   def parse(state) do

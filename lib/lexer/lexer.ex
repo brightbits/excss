@@ -53,7 +53,6 @@ defmodule ExCss.Lexer do
   defp visit_consumers(_, []), do: raise "Unable to match the input to a consumer"
   defp visit_consumers(state, [consumer | consumers]) do
     {state, token} = state |> consumer.accept
-
     case token do
       nil ->
         state |> visit_consumers(consumers)

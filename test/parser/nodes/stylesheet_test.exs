@@ -44,24 +44,24 @@ defmodule ExCss.Parser.Nodes.StylesheetTest do
           value: %Nodes.RuleList{
             rules: {
               %Nodes.QualifiedRule{
-                prelude: [
+                prelude: {
                   %Tokens.Hash{id: true, value: "test-123"},
                   %Tokens.Whitespace{},
                   %Tokens.Id{value: "test 1"},
                   %Tokens.Whitespace{},
                   %Tokens.Id{value: "test 3"},
                   %Tokens.Whitespace{}
-                ],
+                },
                 block: %Nodes.SimpleBlock{
                   associated_token: %Tokens.OpenCurly{},
-                  value: [
+                  value: {
                     %Tokens.Id{value: "something"},
                     %Tokens.Whitespace{},
-                  ]
+                  }
                 }
               },
               %Nodes.QualifiedRule{
-                prelude: [
+                prelude: {
                   %Tokens.Hash{id: true, value: "test-123"},
                   %Tokens.Whitespace{},
                   %Tokens.Delim{value: "."},
@@ -70,13 +70,13 @@ defmodule ExCss.Parser.Nodes.StylesheetTest do
                   %Tokens.Delim{value: "."},
                   %Tokens.Id{value: "test 3"},
                   %Tokens.Whitespace{}
-                ],
+                },
                 block: %Nodes.SimpleBlock{
                   associated_token: %Tokens.OpenCurly{},
-                  value: [
+                  value: {
                     %Tokens.Id{value: "something-else"},
                     %Tokens.Whitespace{}
-                  ]
+                  }
                 }
               }
             }

@@ -44,9 +44,9 @@ defmodule ExCss.Parser.Nodes.SimpleSelectorTest do
             value: %Nodes.TypeSelector{
               value: "h1"
             },
-            modifiers: [
+            modifiers: {
               %Nodes.Class{value: "title"}
-            ]
+            }
           })
         end
       end
@@ -73,11 +73,11 @@ defmodule ExCss.Parser.Nodes.SimpleSelectorTest do
             value: %Nodes.TypeSelector{
               value: "em"
             },
-            modifiers: [
+            modifiers: {
               %Nodes.Hash{value: "page_title"},
               %Nodes.Attribute{value: "hat", match_token: %Tokens.DashMatch{}, match_value: "cat"},
               %Nodes.Pseudo{value: "visited", type: :class}
-            ]
+            }
           })
         end
       end
@@ -110,9 +110,9 @@ defmodule ExCss.Parser.Nodes.SimpleSelectorTest do
 
           expect(simple_selector) |> to_eq(%Nodes.SimpleSelector{
             value: %Nodes.UniversalSelector{},
-            modifiers: [
+            modifiers: {
               %Nodes.Class{value: "title"}
-            ]
+            }
           })
         end
       end
@@ -137,11 +137,11 @@ defmodule ExCss.Parser.Nodes.SimpleSelectorTest do
 
           expect(simple_selector) |> to_eq(%Nodes.SimpleSelector{
             value: %Nodes.UniversalSelector{},
-            modifiers: [
+            modifiers: {
               %Nodes.Hash{value: "page_title"},
               %Nodes.Attribute{value: "hat", match_token: %Tokens.DashMatch{}, match_value: "cat"},
               %Nodes.Pseudo{value: "visited", type: :class}
-            ]
+            }
           })
         end
       end
@@ -171,9 +171,9 @@ defmodule ExCss.Parser.Nodes.SimpleSelectorTest do
 
           expect(simple_selector) |> to_eq(%Nodes.SimpleSelector{
             value: %Nodes.UniversalSelector{},
-            modifiers: [
+            modifiers: {
               %Nodes.Class{value: "title"}
-            ]
+            }
           })
         end
       end
@@ -197,11 +197,11 @@ defmodule ExCss.Parser.Nodes.SimpleSelectorTest do
 
           expect(simple_selector) |> to_eq(%Nodes.SimpleSelector{
             value: %Nodes.UniversalSelector{},
-            modifiers: [
+            modifiers: {
               %Nodes.Hash{value: "page_title"},
               %Nodes.Attribute{value: "hat", match_token: %Tokens.DashMatch{}, match_value: "cat"},
               %Nodes.Pseudo{value: "visited", type: :class}
-            ]
+            }
           })
         end
       end
