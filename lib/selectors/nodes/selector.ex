@@ -2,11 +2,11 @@
 #   : simple_selector_sequence [ combinator simple_selector_sequence ]*
 #   ;
 
-defmodule ExCss.Parser.Nodes.Selector do
+defmodule ExCss.Selectors.Nodes.Selector do
   alias ExCss.Utils.PrettyPrint
 
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Selectors.Nodes, as: N
   
   defstruct value: nil
 

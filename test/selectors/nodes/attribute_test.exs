@@ -1,9 +1,9 @@
-defmodule ExCss.Parser.Nodes.AttributeTest do
+defmodule ExCss.Selectors.Nodes.AttributeTest do
   use Pavlov.Case, async: true
   import Pavlov.Syntax.Expect
 
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Selectors.Nodes, as: N
   alias ExCss.Lexer.Tokens, as: T
 
   describe ".parse" do

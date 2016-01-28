@@ -4,11 +4,11 @@
 #   | [ HASH | class | attrib | pseudo | negation ]+
 #   ;
 
-defmodule ExCss.Parser.Nodes.SimpleSelector do
+defmodule ExCss.Selectors.Nodes.SimpleSelector do
   alias ExCss.Utils.PrettyPrint
 
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Selectors.Nodes, as: N
   alias ExCss.Lexer.Tokens, as: T
 
   defstruct value: nil, modifiers: {}

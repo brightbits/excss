@@ -3,7 +3,7 @@ defmodule ExCss.Parser do
   alias ExCss.Parser.Nodes
   alias ExCss.Lexer.Tokens
 
-  def parse(str, opts \\ []) do
+  def parse(str, opts \\ [specifications: [ExCss.Selectors]]) do
     {_, stylesheet} = Nodes.Stylesheet.parse(State.new(str, opts))
     stylesheet
   end

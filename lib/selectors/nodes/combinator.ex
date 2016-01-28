@@ -1,8 +1,8 @@
-defmodule ExCss.Parser.Nodes.Combinator do
+defmodule ExCss.Selectors.Nodes.Combinator do
   alias ExCss.Utils.PrettyPrint
 
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Selectors.Nodes, as: N
   alias ExCss.Lexer.Tokens, as: T
 
   defstruct type: nil, left: nil, right: nil

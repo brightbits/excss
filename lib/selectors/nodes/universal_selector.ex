@@ -1,8 +1,8 @@
-defmodule ExCss.Parser.Nodes.UniversalSelector do
+defmodule ExCss.Selectors.Nodes.UniversalSelector do
   alias ExCss.Utils.PrettyPrint
 
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Selectors.Nodes, as: N
   alias ExCss.Lexer.Tokens, as: T
 
   defstruct []

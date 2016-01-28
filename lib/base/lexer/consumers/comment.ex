@@ -1,6 +1,5 @@
 defmodule ExCss.Lexer.Consumers.Comment do
   import ExCss.Lexer.Shared
-  alias ExCss.Lexer.Tokens
   alias ExCss.Lexer.State
 
   def accept(state) do

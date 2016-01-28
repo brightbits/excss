@@ -1,9 +1,9 @@
-defmodule ExCss.Parser.Nodes.SimpleSelectorTest do
+defmodule ExCss.Selectors.Nodes.SimpleSelectorTest do
   use Pavlov.Case, async: true
   import Pavlov.Syntax.Expect
 
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Selectors.Nodes, as: N
   alias ExCss.Lexer.Tokens, as: T
 
   #   : [ type_selector | universal ]

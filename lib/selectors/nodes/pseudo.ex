@@ -1,8 +1,8 @@
-defmodule ExCss.Parser.Nodes.Pseudo do
+defmodule ExCss.Selectors.Nodes.Pseudo do
   alias ExCss.Utils.PrettyPrint
 
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Selectors.Nodes, as: N
   alias ExCss.Lexer.Tokens, as: T
 
   defstruct value: nil, type: nil, function: nil
