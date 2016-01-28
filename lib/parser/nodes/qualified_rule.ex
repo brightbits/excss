@@ -1,8 +1,9 @@
 defmodule ExCss.Parser.Nodes.QualifiedRule do
   alias ExCss.Utils.PrettyPrint
+
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes
-  alias ExCss.Lexer.Tokens
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
 
   defstruct prelude: {}, block: nil
 
@@ -10,12 +11,12 @@ defmodule ExCss.Parser.Nodes.QualifiedRule do
     PrettyPrint.pretty_out("Qualified Rule:", indent)
     PrettyPrint.pretty_out("Prelude:", indent + 1)
 
-    state = ExCss.Parser.State.new(qualified_rule.prelude)
-    {_, selector} = Nodes.Selector.parse(state)
+    state = State.new(qualified_rule.prelude)
+    {_, selector} = N.Selector.parse(state)
     PrettyPrint.pretty_out(selector, indent + 2)
 
-    state = ExCss.Parser.State.new(qualified_rule.block.value)
-    {_, declaration_list} = Nodes.DeclarationList.parse(state)
+    state = State.new(qualified_rule.block.value)
+    {_, declaration_list} = N.DeclarationList.parse(state)
     PrettyPrint.pretty_out(declaration_list, indent + 1)
   end
 
@@ -27,7 +28,7 @@ defmodule ExCss.Parser.Nodes.QualifiedRule do
     state |> State.debug("-- CONSUMING A QUALIFIED RULE --")
     state = State.consume_whitespace(state)
 
-    {state, rule} = consume_a_qualified_rule(state, %Nodes.QualifiedRule{prelude: []})
+    {state, rule} = consume_a_qualified_rule(state, %N.QualifiedRule{prelude: []})
 
     if rule do
       prelude =
@@ -54,14 +55,14 @@ defmodule ExCss.Parser.Nodes.QualifiedRule do
     # anything else
     # Reconsume the current input token. Consume a component value. Append the returned value to the qualified rule’s prelude.
 
-    if state |> State.currently?(Tokens.EndOfFile) do
+    if state |> State.currently?(T.EndOfFile) do
       {state, nil}
     else
       cond do
         State.currently_simple_block?(state) ->
           {state, %{rule | block: state.token}}
-        state |> State.currently?(Tokens.OpenCurly) ->
-          {state, simple_block} = Nodes.SimpleBlock.parse(state)
+        state |> State.currently?(T.OpenCurly) ->
+          {state, simple_block} = N.SimpleBlock.parse(state)
           {state, %{rule | block: simple_block}}
         true ->
           {state, component_value} = State.consume_component_value(state)

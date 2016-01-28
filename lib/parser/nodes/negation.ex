@@ -1,8 +1,10 @@
 defmodule ExCss.Parser.Nodes.Negation do
   alias ExCss.Utils.PrettyPrint
+
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes
-  alias ExCss.Lexer.Tokens
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
+
   defstruct value: nil
 
   def pretty_print(hash, indent) do
@@ -20,7 +22,7 @@ defmodule ExCss.Parser.Nodes.Negation do
   #   ;
   def parse(state) do
     state |> State.debug("-- CONSUMING A NEGATION --")
-    if State.currently?(state, Tokens.Function) && String.downcase(state.token.value) == "not" do
+    if State.currently?(state, T.Function) && String.downcase(state.token.value) == "not" do
       {state, arg} =
         state
         |> State.consume # NOT
@@ -28,7 +30,7 @@ defmodule ExCss.Parser.Nodes.Negation do
         |> consume_negation_arg # negation_arg
 
       if arg do
-        {state, %Nodes.Negation{value: arg}}
+        {state, %N.Negation{value: arg}}
       else
         {state, nil}
       end
@@ -39,19 +41,19 @@ defmodule ExCss.Parser.Nodes.Negation do
 
   defp consume_negation_arg(state) do
     {state, arg} = cond do
-      State.currently?(state, Tokens.Id) -> Nodes.TypeSelector.parse(state)
-      State.currently?(state, Tokens.Delim, "*") -> Nodes.UniversalSelector.parse(state)
-      State.currently?(state, Tokens.Hash) -> Nodes.Hash.parse(state)
-      State.currently?(state, Tokens.Delim, ".") -> Nodes.Class.parse(state)
-      State.currently?(state, Tokens.OpenSquare) -> Nodes.Attribute.parse(state)
-      State.currently?(state, Tokens.Colon) -> Nodes.Pseudo.parse(state)
+      State.currently?(state, T.Id) -> N.TypeSelector.parse(state)
+      State.currently?(state, T.Delim, "*") -> N.UniversalSelector.parse(state)
+      State.currently?(state, T.Hash) -> N.Hash.parse(state)
+      State.currently?(state, T.Delim, ".") -> N.Class.parse(state)
+      State.currently?(state, T.OpenSquare) -> N.Attribute.parse(state)
+      State.currently?(state, T.Colon) -> N.Pseudo.parse(state)
       true -> {state, nil}
     end
 
     if arg do
       state = State.consume_whitespace(state) # S*
 
-      if State.currently?(state, Tokens.CloseParenthesis) do
+      if State.currently?(state, T.CloseParenthesis) do
         {State.consume(state), arg} # )
       else
         {state, nil}

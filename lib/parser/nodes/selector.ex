@@ -4,8 +4,10 @@
 
 defmodule ExCss.Parser.Nodes.Selector do
   alias ExCss.Utils.PrettyPrint
+
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes
+  alias ExCss.Parser.Nodes, as: N
+  
   defstruct value: nil
 
   def pretty_print(selector, indent) do
@@ -16,11 +18,11 @@ defmodule ExCss.Parser.Nodes.Selector do
   def parse(state) do
     state |> State.debug("-- CONSUMING A SELECTOR --")
 
-    {state, simple_selector} = Nodes.SimpleSelector.parse(state)
+    {state, simple_selector} = N.SimpleSelector.parse(state)
 
     if simple_selector do
       {state, combinators} = consume_combinators(state, simple_selector)
-      {state, %Nodes.Selector{value: combinators}}
+      {state, %N.Selector{value: combinators}}
     else
       {state, nil}
     end
@@ -28,14 +30,14 @@ defmodule ExCss.Parser.Nodes.Selector do
 
   defp consume_combinators(state, simple_selector) do
     state |> State.debug("before comb: #{inspect state.token}")
-    {state, combinator} = Nodes.Combinator.parse(state)
+    {state, combinator} = N.Combinator.parse(state)
 
     if combinator do
       state |> State.debug("got a combinator: #{inspect combinator}")
 
       state |> State.debug("before SS: #{inspect state.token}")
 
-      {state, another_selector} = Nodes.Selector.parse(state)
+      {state, another_selector} = N.Selector.parse(state)
 
       state |> State.debug("after SS: #{inspect another_selector} --- #{inspect state.token}")
 

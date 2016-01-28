@@ -1,9 +1,11 @@
 defmodule ExCss.Parser.Nodes.RuleList do
   alias ExCss.Utils.PrettyPrint
+
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
   alias ExCss.Lexer.Token
-  alias ExCss.Lexer.Tokens
+
   defstruct rules: {}
 
   def pretty_print(rule_list, indent) do
@@ -15,7 +17,7 @@ defmodule ExCss.Parser.Nodes.RuleList do
   def parse(state, top_level \\ false) do
     {state, rules} = consume_a_list_of_rules(state, top_level)
 
-    {state, %Nodes.RuleList{rules: rules}}
+    {state, %N.RuleList{rules: rules}}
   end
 
   defp consume_a_list_of_rules(state, top_level) do
@@ -51,22 +53,22 @@ defmodule ExCss.Parser.Nodes.RuleList do
     state = state |> State.consume_whitespace
     token_type = Token.type(state.token)
     cond do
-      token_type == Tokens.EndOfFile ->
+      token_type == T.EndOfFile ->
         {state, rules}
-      token_type == Tokens.CDO || token_type == Tokens.CDC ->
+      token_type == T.CDO || token_type == T.CDC ->
         unless top_level do
           {state, qualified_rule} = state
           |> State.reconsume
-          |> Nodes.QualifiedRule.parse
+          |> N.QualifiedRule.parse
 
           rules = [qualified_rule] ++ rules
         end
 
         consume_a_list_of_rules(state, top_level, rules)
 
-      token_type == Tokens.AtKeyword ->
+      token_type == T.AtKeyword ->
         {state, at_rule} = state
-        |> Nodes.AtRule.parse
+        |> N.AtRule.parse
 
         if at_rule do
           rules = [at_rule] ++ rules
@@ -77,7 +79,7 @@ defmodule ExCss.Parser.Nodes.RuleList do
       true ->
         {state, qualified_rule} = state
         |> State.reconsume
-        |> Nodes.QualifiedRule.parse
+        |> N.QualifiedRule.parse
 
         if qualified_rule do
           rules = [qualified_rule] ++ rules

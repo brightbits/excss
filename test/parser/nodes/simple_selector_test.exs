@@ -2,9 +2,9 @@ defmodule ExCss.Parser.Nodes.SimpleSelectorTest do
   use Pavlov.Case, async: true
   import Pavlov.Syntax.Expect
 
-  alias ExCss.Lexer.Tokens
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
 
   #   : [ type_selector | universal ]
   #     [ HASH | class | attrib | pseudo | negation ]*
@@ -17,13 +17,13 @@ defmodule ExCss.Parser.Nodes.SimpleSelectorTest do
       context "without a modifier" do
         it "parses correctly" do
           tokens = [
-            %Tokens.Id{value: "h1"}
+            %T.Id{value: "h1"}
           ]
 
-          {_, simple_selector} = Nodes.SimpleSelector.parse(State.new(tokens))
+          {_, simple_selector} = N.SimpleSelector.parse(State.new(tokens))
 
-          expect(simple_selector) |> to_eq(%Nodes.SimpleSelector{
-            value: %Nodes.TypeSelector{
+          expect(simple_selector) |> to_eq(%N.SimpleSelector{
+            value: %N.TypeSelector{
               value: "h1"
             }
           })
@@ -33,19 +33,19 @@ defmodule ExCss.Parser.Nodes.SimpleSelectorTest do
       context "with a modifier" do
         it "parses correctly" do
           tokens = [
-            %Tokens.Id{value: "h1"},
-            %Tokens.Delim{value: "."},
-            %Tokens.Id{value: "title"}
+            %T.Id{value: "h1"},
+            %T.Delim{value: "."},
+            %T.Id{value: "title"}
           ]
 
-          {_, simple_selector} = Nodes.SimpleSelector.parse(State.new(tokens))
+          {_, simple_selector} = N.SimpleSelector.parse(State.new(tokens))
 
-          expect(simple_selector) |> to_eq(%Nodes.SimpleSelector{
-            value: %Nodes.TypeSelector{
+          expect(simple_selector) |> to_eq(%N.SimpleSelector{
+            value: %N.TypeSelector{
               value: "h1"
             },
             modifiers: {
-              %Nodes.Class{value: "title"}
+              %N.Class{value: "title"}
             }
           })
         end
@@ -54,29 +54,29 @@ defmodule ExCss.Parser.Nodes.SimpleSelectorTest do
       context "with several modifier" do
         it "parses correctly" do
           tokens = [
-            %Tokens.Id{value: "em"},
-            %Tokens.Hash{value: "page_title"},
-            %Tokens.OpenSquare{},
-            %Tokens.Id{value: "hat"},
-            %Tokens.Whitespace{},
-            %Tokens.DashMatch{},
-            %Tokens.Whitespace{},
-            %Tokens.String{value: "cat"},
-            %Tokens.CloseSquare{},
-            %Tokens.Colon{},
-            %Tokens.Id{value: "visited"}
+            %T.Id{value: "em"},
+            %T.Hash{value: "page_title"},
+            %T.OpenSquare{},
+            %T.Id{value: "hat"},
+            %T.Whitespace{},
+            %T.DashMatch{},
+            %T.Whitespace{},
+            %T.String{value: "cat"},
+            %T.CloseSquare{},
+            %T.Colon{},
+            %T.Id{value: "visited"}
           ]
 
-          {_, simple_selector} = Nodes.SimpleSelector.parse(State.new(tokens))
+          {_, simple_selector} = N.SimpleSelector.parse(State.new(tokens))
 
-          expect(simple_selector) |> to_eq(%Nodes.SimpleSelector{
-            value: %Nodes.TypeSelector{
+          expect(simple_selector) |> to_eq(%N.SimpleSelector{
+            value: %N.TypeSelector{
               value: "em"
             },
             modifiers: {
-              %Nodes.Hash{value: "page_title"},
-              %Nodes.Attribute{value: "hat", match_token: %Tokens.DashMatch{}, match_value: "cat"},
-              %Nodes.Pseudo{value: "visited", type: :class}
+              %N.Hash{value: "page_title"},
+              %N.Attribute{value: "hat", match_token: %T.DashMatch{}, match_value: "cat"},
+              %N.Pseudo{value: "visited", type: :class}
             }
           })
         end
@@ -87,13 +87,13 @@ defmodule ExCss.Parser.Nodes.SimpleSelectorTest do
       context "without a modifier" do
         it "parses correctly" do
           tokens = [
-            %Tokens.Delim{value: "*"}
+            %T.Delim{value: "*"}
           ]
 
-          {_, simple_selector} = Nodes.SimpleSelector.parse(State.new(tokens))
+          {_, simple_selector} = N.SimpleSelector.parse(State.new(tokens))
 
-          expect(simple_selector) |> to_eq(%Nodes.SimpleSelector{
-            value: %Nodes.UniversalSelector{}
+          expect(simple_selector) |> to_eq(%N.SimpleSelector{
+            value: %N.UniversalSelector{}
           })
         end
       end
@@ -101,17 +101,17 @@ defmodule ExCss.Parser.Nodes.SimpleSelectorTest do
       context "with a modifier" do
         it "parses correctly" do
           tokens = [
-            %Tokens.Delim{value: "*"},
-            %Tokens.Delim{value: "."},
-            %Tokens.Id{value: "title"}
+            %T.Delim{value: "*"},
+            %T.Delim{value: "."},
+            %T.Id{value: "title"}
           ]
 
-          {_, simple_selector} = Nodes.SimpleSelector.parse(State.new(tokens))
+          {_, simple_selector} = N.SimpleSelector.parse(State.new(tokens))
 
-          expect(simple_selector) |> to_eq(%Nodes.SimpleSelector{
-            value: %Nodes.UniversalSelector{},
+          expect(simple_selector) |> to_eq(%N.SimpleSelector{
+            value: %N.UniversalSelector{},
             modifiers: {
-              %Nodes.Class{value: "title"}
+              %N.Class{value: "title"}
             }
           })
         end
@@ -120,27 +120,27 @@ defmodule ExCss.Parser.Nodes.SimpleSelectorTest do
       context "with several modifier" do
         it "parses correctly" do
           tokens = [
-            %Tokens.Delim{value: "*"},
-            %Tokens.Hash{value: "page_title"},
-            %Tokens.OpenSquare{},
-            %Tokens.Id{value: "hat"},
-            %Tokens.Whitespace{},
-            %Tokens.DashMatch{},
-            %Tokens.Whitespace{},
-            %Tokens.String{value: "cat"},
-            %Tokens.CloseSquare{},
-            %Tokens.Colon{},
-            %Tokens.Id{value: "visited"}
+            %T.Delim{value: "*"},
+            %T.Hash{value: "page_title"},
+            %T.OpenSquare{},
+            %T.Id{value: "hat"},
+            %T.Whitespace{},
+            %T.DashMatch{},
+            %T.Whitespace{},
+            %T.String{value: "cat"},
+            %T.CloseSquare{},
+            %T.Colon{},
+            %T.Id{value: "visited"}
           ]
 
-          {_, simple_selector} = Nodes.SimpleSelector.parse(State.new(tokens))
+          {_, simple_selector} = N.SimpleSelector.parse(State.new(tokens))
 
-          expect(simple_selector) |> to_eq(%Nodes.SimpleSelector{
-            value: %Nodes.UniversalSelector{},
+          expect(simple_selector) |> to_eq(%N.SimpleSelector{
+            value: %N.UniversalSelector{},
             modifiers: {
-              %Nodes.Hash{value: "page_title"},
-              %Nodes.Attribute{value: "hat", match_token: %Tokens.DashMatch{}, match_value: "cat"},
-              %Nodes.Pseudo{value: "visited", type: :class}
+              %N.Hash{value: "page_title"},
+              %N.Attribute{value: "hat", match_token: %T.DashMatch{}, match_value: "cat"},
+              %N.Pseudo{value: "visited", type: :class}
             }
           })
         end
@@ -151,10 +151,10 @@ defmodule ExCss.Parser.Nodes.SimpleSelectorTest do
       context "without a modifier" do
         it "returns nil" do
           tokens = [
-            %Tokens.Number{value: 42}
+            %T.Number{value: 42}
           ]
 
-          {_, simple_selector} = Nodes.SimpleSelector.parse(State.new(tokens))
+          {_, simple_selector} = N.SimpleSelector.parse(State.new(tokens))
 
           expect(simple_selector) |> to_be_nil
         end
@@ -163,16 +163,16 @@ defmodule ExCss.Parser.Nodes.SimpleSelectorTest do
       context "with a modifier" do
         it "parses correctly" do
           tokens = [
-            %Tokens.Delim{value: "."},
-            %Tokens.Id{value: "title"}
+            %T.Delim{value: "."},
+            %T.Id{value: "title"}
           ]
 
-          {_, simple_selector} = Nodes.SimpleSelector.parse(State.new(tokens))
+          {_, simple_selector} = N.SimpleSelector.parse(State.new(tokens))
 
-          expect(simple_selector) |> to_eq(%Nodes.SimpleSelector{
-            value: %Nodes.UniversalSelector{},
+          expect(simple_selector) |> to_eq(%N.SimpleSelector{
+            value: %N.UniversalSelector{},
             modifiers: {
-              %Nodes.Class{value: "title"}
+              %N.Class{value: "title"}
             }
           })
         end
@@ -181,26 +181,26 @@ defmodule ExCss.Parser.Nodes.SimpleSelectorTest do
       context "with several modifier" do
         it "parses correctly" do
           tokens = [
-            %Tokens.Hash{value: "page_title"},
-            %Tokens.OpenSquare{},
-            %Tokens.Id{value: "hat"},
-            %Tokens.Whitespace{},
-            %Tokens.DashMatch{},
-            %Tokens.Whitespace{},
-            %Tokens.String{value: "cat"},
-            %Tokens.CloseSquare{},
-            %Tokens.Colon{},
-            %Tokens.Id{value: "visited"}
+            %T.Hash{value: "page_title"},
+            %T.OpenSquare{},
+            %T.Id{value: "hat"},
+            %T.Whitespace{},
+            %T.DashMatch{},
+            %T.Whitespace{},
+            %T.String{value: "cat"},
+            %T.CloseSquare{},
+            %T.Colon{},
+            %T.Id{value: "visited"}
           ]
 
-          {_, simple_selector} = Nodes.SimpleSelector.parse(State.new(tokens))
+          {_, simple_selector} = N.SimpleSelector.parse(State.new(tokens))
 
-          expect(simple_selector) |> to_eq(%Nodes.SimpleSelector{
-            value: %Nodes.UniversalSelector{},
+          expect(simple_selector) |> to_eq(%N.SimpleSelector{
+            value: %N.UniversalSelector{},
             modifiers: {
-              %Nodes.Hash{value: "page_title"},
-              %Nodes.Attribute{value: "hat", match_token: %Tokens.DashMatch{}, match_value: "cat"},
-              %Nodes.Pseudo{value: "visited", type: :class}
+              %N.Hash{value: "page_title"},
+              %N.Attribute{value: "hat", match_token: %T.DashMatch{}, match_value: "cat"},
+              %N.Pseudo{value: "visited", type: :class}
             }
           })
         end

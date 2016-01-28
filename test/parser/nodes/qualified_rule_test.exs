@@ -2,9 +2,9 @@ defmodule ExCss.Parser.Nodes.QualifiedRuleTest do
   use Pavlov.Case, async: true
   import Pavlov.Syntax.Expect
 
-  alias ExCss.Lexer.Tokens
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
 
   # Create a new qualified rule with its prelude initially set to an empty list, and its value initially set to nothing.
   #
@@ -24,7 +24,7 @@ defmodule ExCss.Parser.Nodes.QualifiedRuleTest do
       it "returns no qualified rule" do
         tokens = []
 
-        {_, qualified_rule} = ExCss.Parser.Nodes.QualifiedRule.parse(State.new(tokens))
+        {_, qualified_rule} = N.QualifiedRule.parse(State.new(tokens))
 
         expect(qualified_rule) |> to_be_nil
       end
@@ -33,41 +33,41 @@ defmodule ExCss.Parser.Nodes.QualifiedRuleTest do
     context "with {" do
       it "parses it correctly" do
         tokens = [
-          %Tokens.Whitespace{},
-          %Tokens.Hash{id: true, value: "test"},
-          %Tokens.Whitespace{},
-          %Tokens.Hash{id: true, value: "test2"},
-          %Tokens.Whitespace{},
-          %Tokens.OpenCurly{},
-          %Tokens.Whitespace{},
-          %Tokens.Id{value: "test 1"},
-          %Tokens.Whitespace{},
-          %Tokens.Id{value: "test 2"},
-          %Tokens.Whitespace{},
-          %Tokens.Id{value: "test 3"},
-          %Tokens.Whitespace{},
-          %Tokens.CloseCurly{},
-          %Tokens.Whitespace{}
+          %T.Whitespace{},
+          %T.Hash{id: true, value: "test"},
+          %T.Whitespace{},
+          %T.Hash{id: true, value: "test2"},
+          %T.Whitespace{},
+          %T.OpenCurly{},
+          %T.Whitespace{},
+          %T.Id{value: "test 1"},
+          %T.Whitespace{},
+          %T.Id{value: "test 2"},
+          %T.Whitespace{},
+          %T.Id{value: "test 3"},
+          %T.Whitespace{},
+          %T.CloseCurly{},
+          %T.Whitespace{}
         ]
 
-        {_, qualified_rule} = ExCss.Parser.Nodes.QualifiedRule.parse(State.new(tokens))
+        {_, qualified_rule} = N.QualifiedRule.parse(State.new(tokens))
 
-        expect(qualified_rule) |> to_eq(%ExCss.Parser.Nodes.QualifiedRule{
+        expect(qualified_rule) |> to_eq(%N.QualifiedRule{
           prelude: {
-            %Tokens.Hash{id: true, value: "test"},
-            %Tokens.Whitespace{},
-            %Tokens.Hash{id: true, value: "test2"},
-            %Tokens.Whitespace{}
+            %T.Hash{id: true, value: "test"},
+            %T.Whitespace{},
+            %T.Hash{id: true, value: "test2"},
+            %T.Whitespace{}
           },
-          block: %Nodes.SimpleBlock{
-            associated_token: %Tokens.OpenCurly{},
+          block: %N.SimpleBlock{
+            associated_token: %T.OpenCurly{},
             value: {
-              %Tokens.Id{value: "test 1"},
-              %Tokens.Whitespace{},
-              %Tokens.Id{value: "test 2"},
-              %Tokens.Whitespace{},
-              %Tokens.Id{value: "test 3"},
-              %Tokens.Whitespace{}
+              %T.Id{value: "test 1"},
+              %T.Whitespace{},
+              %T.Id{value: "test 2"},
+              %T.Whitespace{},
+              %T.Id{value: "test 3"},
+              %T.Whitespace{}
             }
           }
         })

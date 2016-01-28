@@ -2,9 +2,9 @@ defmodule ExCss.Parser.Nodes.SelectorTest do
   use Pavlov.Case, async: true
   import Pavlov.Syntax.Expect
 
-  alias ExCss.Lexer.Tokens
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
 
   # selector
   #   : simple_selector_sequence [ combinator simple_selector_sequence ]*
@@ -14,14 +14,14 @@ defmodule ExCss.Parser.Nodes.SelectorTest do
       context "without a combinator" do
         it "parses correctly" do
           tokens = [
-            %Tokens.Id{value: "h1"}
+            %T.Id{value: "h1"}
           ]
 
-          {_, selector} = Nodes.Selector.parse(State.new(tokens))
+          {_, selector} = N.Selector.parse(State.new(tokens))
 
-          expect(selector) |> to_eq(%Nodes.Selector{
-            value: %Nodes.SimpleSelector{
-              value: %Nodes.TypeSelector{
+          expect(selector) |> to_eq(%N.Selector{
+            value: %N.SimpleSelector{
+              value: %N.TypeSelector{
                 value: "h1"
               },
               modifiers: {}
@@ -33,15 +33,15 @@ defmodule ExCss.Parser.Nodes.SelectorTest do
       context "with trailing whitespace but nothing else" do
         it "parses correctly" do
           tokens = [
-            %Tokens.Id{value: "h1"},
-            %Tokens.Whitespace{}
+            %T.Id{value: "h1"},
+            %T.Whitespace{}
           ]
 
-          {_, selector} = Nodes.Selector.parse(State.new(tokens))
+          {_, selector} = N.Selector.parse(State.new(tokens))
 
-          expect(selector) |> to_eq(%Nodes.Selector{
-            value: %Nodes.SimpleSelector{
-              value: %Nodes.TypeSelector{
+          expect(selector) |> to_eq(%N.Selector{
+            value: %N.SimpleSelector{
+              value: %N.TypeSelector{
                 value: "h1"
               },
               modifiers: {}
@@ -53,25 +53,25 @@ defmodule ExCss.Parser.Nodes.SelectorTest do
       context "with a whitespace combinator" do
         it "parses correctly" do
           tokens = [
-            %Tokens.Id{value: "h1"},
-            %Tokens.Whitespace{},
-            %Tokens.Delim{value: "."},
-            %Tokens.Id{value: "title"}
+            %T.Id{value: "h1"},
+            %T.Whitespace{},
+            %T.Delim{value: "."},
+            %T.Id{value: "title"}
           ]
 
-          {_, selector} = Nodes.Selector.parse(State.new(tokens))
+          {_, selector} = N.Selector.parse(State.new(tokens))
 
-          expect(selector) |> to_eq(%Nodes.Selector{
-            value: %Nodes.Combinator{
+          expect(selector) |> to_eq(%N.Selector{
+            value: %N.Combinator{
               type: :descendant,
-              left: %Nodes.SimpleSelector{
-                value: %Nodes.TypeSelector{value: "h1"},
+              left: %N.SimpleSelector{
+                value: %N.TypeSelector{value: "h1"},
                 modifiers: {}
               },
-              right: %Nodes.SimpleSelector{
-                value: %Nodes.UniversalSelector{},
+              right: %N.SimpleSelector{
+                value: %N.UniversalSelector{},
                 modifiers: {
-                  %Nodes.Class{value: "title"}
+                  %N.Class{value: "title"}
                 }
               }
             }
@@ -82,27 +82,27 @@ defmodule ExCss.Parser.Nodes.SelectorTest do
       context "with a different combinator" do
         it "parses correctly" do
           tokens = [
-            %Tokens.Id{value: "h1"},
-            %Tokens.Whitespace{},
-            %Tokens.Delim{value: ">"},
-            %Tokens.Whitespace{},
-            %Tokens.Delim{value: "."},
-            %Tokens.Id{value: "title"}
+            %T.Id{value: "h1"},
+            %T.Whitespace{},
+            %T.Delim{value: ">"},
+            %T.Whitespace{},
+            %T.Delim{value: "."},
+            %T.Id{value: "title"}
           ]
 
-          {_, selector} = Nodes.Selector.parse(State.new(tokens))
+          {_, selector} = N.Selector.parse(State.new(tokens))
 
-          expect(selector) |> to_eq(%Nodes.Selector{
-            value: %Nodes.Combinator{
+          expect(selector) |> to_eq(%N.Selector{
+            value: %N.Combinator{
               type: :child,
-              left: %Nodes.SimpleSelector{
-                value: %Nodes.TypeSelector{value: "h1"},
+              left: %N.SimpleSelector{
+                value: %N.TypeSelector{value: "h1"},
                 modifiers: {}
               },
-              right: %Nodes.SimpleSelector{
-                value: %Nodes.UniversalSelector{},
+              right: %N.SimpleSelector{
+                value: %N.UniversalSelector{},
                 modifiers: {
-                  %Nodes.Class{value: "title"}
+                  %N.Class{value: "title"}
                 }
               }
             }
@@ -113,19 +113,19 @@ defmodule ExCss.Parser.Nodes.SelectorTest do
       context "with a bunch of combinators" do
         it "parses correctly" do
           tokens = [
-            %Tokens.Colon{},
-            %Tokens.Function{value: "nth-child"},
-            %Tokens.Number{value: 3},
-            %Tokens.CloseParenthesis{},
-            %Tokens.Whitespace{},
-            %Tokens.Delim{value: "."},
-            %Tokens.Id{value: "title"},
-            %Tokens.Delim{value: "."},
-            %Tokens.Id{value: "potato"},
-            %Tokens.Hash{value: "my_id"},
-            %Tokens.Delim{value: ">"},
-            %Tokens.Delim{value: "."},
-            %Tokens.Id{value: "cat"}
+            %T.Colon{},
+            %T.Function{value: "nth-child"},
+            %T.Number{value: 3},
+            %T.CloseParenthesis{},
+            %T.Whitespace{},
+            %T.Delim{value: "."},
+            %T.Id{value: "title"},
+            %T.Delim{value: "."},
+            %T.Id{value: "potato"},
+            %T.Hash{value: "my_id"},
+            %T.Delim{value: ">"},
+            %T.Delim{value: "."},
+            %T.Id{value: "cat"}
           ]
 
           # :nth-child(3) .title.potato#my_id>.cat
@@ -135,37 +135,37 @@ defmodule ExCss.Parser.Nodes.SelectorTest do
           #                             /            \
           #                    .title.potato#my_id   .cat
 
-          {_, selector} = Nodes.Selector.parse(State.new(tokens))
+          {_, selector} = N.Selector.parse(State.new(tokens))
 
-          expect(selector) |> to_eq(%Nodes.Selector{
-            value: %Nodes.Combinator{
+          expect(selector) |> to_eq(%N.Selector{
+            value: %N.Combinator{
               type: :descendant,
-              left: %Nodes.SimpleSelector{
-                value: %Nodes.UniversalSelector{},
+              left: %N.SimpleSelector{
+                value: %N.UniversalSelector{},
                 modifiers: {
-                  %Nodes.Pseudo{
+                  %N.Pseudo{
                     type: :function,
                     value: "nth-child",
                     function: {
-                      %Tokens.Number{value: 3}
+                      %T.Number{value: 3}
                     }
                   }
                 }
               },
-              right: %Nodes.Combinator{
+              right: %N.Combinator{
                 type: :child,
-                left: %Nodes.SimpleSelector{
-                  value: %Nodes.UniversalSelector{},
+                left: %N.SimpleSelector{
+                  value: %N.UniversalSelector{},
                   modifiers: {
-                    %Nodes.Class{value: "title"},
-                    %Nodes.Class{value: "potato"},
-                    %Nodes.Hash{value: "my_id"}
+                    %N.Class{value: "title"},
+                    %N.Class{value: "potato"},
+                    %N.Hash{value: "my_id"}
                   }
                 },
-                right: %Nodes.SimpleSelector{
-                  value: %Nodes.UniversalSelector{},
+                right: %N.SimpleSelector{
+                  value: %N.UniversalSelector{},
                   modifiers: {
-                    %Nodes.Class{value: "cat"}
+                    %N.Class{value: "cat"}
                   }
                 }
               }

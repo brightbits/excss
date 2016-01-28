@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-html body > #container .content { /* and this prelude */
+html body > #container .content { /* this is comment! */
   font-weight: bold;
   font-size: 14px;
 }

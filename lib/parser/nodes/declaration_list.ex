@@ -1,9 +1,11 @@
 defmodule ExCss.Parser.Nodes.DeclarationList do
   alias ExCss.Utils.PrettyPrint
+
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
   alias ExCss.Lexer.Token
-  alias ExCss.Lexer.Tokens
+
   defstruct value: {}
 
   def pretty_print(declaration_list, indent) do
@@ -14,7 +16,7 @@ defmodule ExCss.Parser.Nodes.DeclarationList do
 
   def parse(state) do
     {state, declarations} = consume_a_list_of_declarations(state)
-    {state, %Nodes.DeclarationList{value: declarations}}
+    {state, %N.DeclarationList{value: declarations}}
   end
 
   defp consume_a_list_of_declarations(state) do
@@ -51,21 +53,21 @@ defmodule ExCss.Parser.Nodes.DeclarationList do
     state = State.consume_whitespace(state)
 
     case Token.type(state.token) do
-      Tokens.EndOfFile ->
+      T.EndOfFile ->
         {state, declarations}
-      Tokens.Semicolon ->
+      T.Semicolon ->
         consume_a_list_of_declarations(State.consume(state), declarations)
-      Tokens.Comment ->
+      T.Comment ->
         consume_a_list_of_declarations(State.consume(state), declarations)
-      Tokens.AtKeyword ->
-        {state, at_rule} = Nodes.AtRule.parse(state)
+      T.AtKeyword ->
+        {state, at_rule} = N.AtRule.parse(state)
         consume_a_list_of_declarations(state, [at_rule] ++ declarations)
-      Tokens.Id ->
+      T.Id ->
         {state, temp_list} = consume_temp_list_for_declaration(state)
 
         temp_state = State.new(temp_list)
 
-        {_, declaration} = Nodes.Declaration.parse(temp_state)
+        {_, declaration} = N.Declaration.parse(temp_state)
 
         if declaration do
           declarations = [declaration] ++ declarations
@@ -76,7 +78,7 @@ defmodule ExCss.Parser.Nodes.DeclarationList do
   end
 
   defp consume_temp_list_for_declaration(state, temp_list \\ []) do
-    if State.currently?(state, [Tokens.EndOfFile, Tokens.Semicolon]) do
+    if State.currently?(state, [T.EndOfFile, T.Semicolon]) do
       {State.consume(state), temp_list}
     else
       {state, component_value} = State.consume_component_value(state)

@@ -1,8 +1,10 @@
 defmodule ExCss.Parser.Nodes.Attribute do
   alias ExCss.Utils.PrettyPrint
+
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes
-  alias ExCss.Lexer.Tokens
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
+
   defstruct value: nil, match_token: nil, match_value: nil
 
   def pretty_print(attribute, indent) do
@@ -26,8 +28,8 @@ defmodule ExCss.Parser.Nodes.Attribute do
   def parse(state) do
     state = State.consume_ignoring_whitespace(state)
 
-    if State.currently?(state, Tokens.Id) do
-      attribute = %Nodes.Attribute{value: state.token.value}
+    if State.currently?(state, T.Id) do
+      attribute = %N.Attribute{value: state.token.value}
 
       state = State.consume_ignoring_whitespace(state)
 
@@ -46,7 +48,7 @@ defmodule ExCss.Parser.Nodes.Attribute do
 
     state = State.consume_ignoring_whitespace(state)
 
-    if State.currently?(state, [Tokens.Id, Tokens.String]) do
+    if State.currently?(state, [T.Id, T.String]) do
       attribute = %{attribute | match_value: state.token.value}
 
       state
@@ -58,7 +60,7 @@ defmodule ExCss.Parser.Nodes.Attribute do
   end
 
   defp consume_close(state, attribute) do
-    if State.currently?(state, Tokens.CloseSquare) do
+    if State.currently?(state, T.CloseSquare) do
       {State.consume(state), attribute}
     else
       {state, nil}
@@ -66,12 +68,12 @@ defmodule ExCss.Parser.Nodes.Attribute do
   end
 
   defp match_token?(state) do
-    State.currently?(state, Tokens.Delim, "=") || State.currently?(state, [
-      Tokens.PrefixMatch,
-      Tokens.SuffixMatch,
-      Tokens.SubstringMatch,
-      Tokens.IncludeMatch,
-      Tokens.DashMatch
+    State.currently?(state, T.Delim, "=") || State.currently?(state, [
+      T.PrefixMatch,
+      T.SuffixMatch,
+      T.SubstringMatch,
+      T.IncludeMatch,
+      T.DashMatch
     ])
   end
 end

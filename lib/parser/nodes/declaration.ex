@@ -1,7 +1,10 @@
 defmodule ExCss.Parser.Nodes.Declaration do
   alias ExCss.Utils.PrettyPrint
+
   alias ExCss.Parser.State
-  alias ExCss.Lexer.Tokens
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
+
   defstruct name: nil, value: {}, important: false
 
   def pretty_print(declaration, indent) do
@@ -38,7 +41,7 @@ defmodule ExCss.Parser.Nodes.Declaration do
 
     State.debug(state, "currently: #{inspect state.token}, expecting a colon")
 
-    if state |> State.not_currently?(Tokens.Colon) do
+    if state |> State.not_currently?(T.Colon) do
       {state, nil}
     else
       state =
@@ -48,7 +51,7 @@ defmodule ExCss.Parser.Nodes.Declaration do
 
       State.debug(state, "consumed colon and whitespace, currently: #{inspect state.token}")
 
-      {state, declaration} = consume_a_declaration(state, %ExCss.Parser.Nodes.Declaration{name: name, value: []})
+      {state, declaration} = consume_a_declaration(state, %N.Declaration{name: name, value: []})
 
       value =
         declaration.value
@@ -64,7 +67,7 @@ defmodule ExCss.Parser.Nodes.Declaration do
     # append it to the declaration’s value and consume the next input token.
     {state, component_value} = State.consume_component_value(state)
 
-    if component_value != %Tokens.EndOfFile{} do
+    if component_value != %T.EndOfFile{} do
       declaration = %{declaration | value: [component_value] ++ declaration.value}
       consume_a_declaration(state, declaration)
     else
@@ -79,10 +82,10 @@ defmodule ExCss.Parser.Nodes.Declaration do
     if length(declaration.value) > 2 do
       state = State.new(declaration.value) |> State.consume_whitespace
 
-      if State.currently?(state, Tokens.Id) && String.downcase(state.token.value) == "important" do
+      if State.currently?(state, T.Id) && String.downcase(state.token.value) == "important" do
         state = state |> State.consume
 
-        if state.token == %Tokens.Delim{value: "!"} do
+        if state.token == %T.Delim{value: "!"} do
           declaration = %{declaration | value: Enum.drop(declaration.value, state.i + 1), important: true}
         end
       end

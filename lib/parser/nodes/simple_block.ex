@@ -1,7 +1,10 @@
 defmodule ExCss.Parser.Nodes.SimpleBlock do
   alias ExCss.Utils.PrettyPrint
+
   alias ExCss.Parser.State
-  alias ExCss.Lexer.Tokens
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
+
   defstruct associated_token: nil, value: {}
 
   def pretty_print(simple_block, indent) do
@@ -32,7 +35,7 @@ defmodule ExCss.Parser.Nodes.SimpleBlock do
     consume_a_simple_block(
       state,
       ending_token_type,
-      %ExCss.Parser.Nodes.SimpleBlock{
+      %N.SimpleBlock{
         associated_token: associated_token,
         value: []
       }
@@ -47,7 +50,7 @@ defmodule ExCss.Parser.Nodes.SimpleBlock do
     # anything else
     # Reconsume the current input token. Consume a component value and append it to the value of the block.
 
-    if State.currently?(state, [Tokens.EndOfFile, ending_token_type]) do
+    if State.currently?(state, [T.EndOfFile, ending_token_type]) do
       value =
         simple_block.value
         |> Enum.reverse

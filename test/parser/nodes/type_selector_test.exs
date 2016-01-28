@@ -2,18 +2,18 @@ defmodule ExCss.Parser.Nodes.TypeSelectorTest do
   use Pavlov.Case, async: true
   import Pavlov.Syntax.Expect
 
-  alias ExCss.Lexer.Tokens
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
 
   describe ".parse" do
     context "not an id" do
       it "returns nil" do
         tokens = [
-          %Tokens.Whitespace{}
+          %T.Whitespace{}
         ]
 
-        {_, selector} = Nodes.TypeSelector.parse(State.new(tokens))
+        {_, selector} = N.TypeSelector.parse(State.new(tokens))
 
         expect(selector) |> to_be_nil
       end
@@ -21,12 +21,12 @@ defmodule ExCss.Parser.Nodes.TypeSelectorTest do
     context "with an id" do
       it "parses it correctly" do
         tokens = [
-          %Tokens.Id{value: "h1"}
+          %T.Id{value: "h1"}
         ]
 
-        {_, selector} = Nodes.TypeSelector.parse(State.new(tokens))
+        {_, selector} = N.TypeSelector.parse(State.new(tokens))
 
-        expect(selector) |> to_eq(%Nodes.TypeSelector{value: "h1"})
+        expect(selector) |> to_eq(%N.TypeSelector{value: "h1"})
       end
     end
   end

@@ -6,9 +6,11 @@
 
 defmodule ExCss.Parser.Nodes.SimpleSelector do
   alias ExCss.Utils.PrettyPrint
+
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes
-  alias ExCss.Lexer.Tokens
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
+
   defstruct value: nil, modifiers: {}
 
   def pretty_print(selector, indent) do
@@ -19,13 +21,13 @@ defmodule ExCss.Parser.Nodes.SimpleSelector do
   def parse(state) do
     state |> State.debug("-- CONSUMING A SIMPLE SELECTOR --")
 
-    selector = %Nodes.SimpleSelector{}
+    selector = %N.SimpleSelector{}
 
     State.debug(state, "currently: #{inspect state.token}")
 
     {state, value} = cond do # : [ type_selector | universal ]
-      State.currently?(state, Tokens.Id) -> Nodes.TypeSelector.parse(state)
-      State.currently?(state, Tokens.Delim, "*") -> Nodes.UniversalSelector.parse(state)
+      State.currently?(state, T.Id) -> N.TypeSelector.parse(state)
+      State.currently?(state, T.Delim, "*") -> N.UniversalSelector.parse(state)
       true -> {state, nil}
     end
 
@@ -40,7 +42,7 @@ defmodule ExCss.Parser.Nodes.SimpleSelector do
       {state, %{selector | value: value, modifiers: modifiers}} # [ HASH | class | attrib | pseudo | negation ]*
     else
       if tuple_size(modifiers) > 0 do # | [ HASH | class | attrib | pseudo | negation ]+
-        {state, %{selector | value: %Nodes.UniversalSelector{}, modifiers: modifiers}}
+        {state, %{selector | value: %N.UniversalSelector{}, modifiers: modifiers}}
       else
         {state, nil}
       end
@@ -63,11 +65,11 @@ defmodule ExCss.Parser.Nodes.SimpleSelector do
 
   defp consume_modifier(state) do
     cond do
-      State.currently?(state, Tokens.Hash) -> Nodes.Hash.parse(state)
-      State.currently?(state, Tokens.Delim, ".") -> Nodes.Class.parse(state)
-      State.currently?(state, Tokens.OpenSquare) -> Nodes.Attribute.parse(state)
-      State.currently?(state, Tokens.Colon) -> Nodes.Pseudo.parse(state)
-      State.currently?(state, Tokens.Function) && String.downcase(state.token.value) == "not" -> Nodes.Negation.parse(state)
+      State.currently?(state, T.Hash) -> N.Hash.parse(state)
+      State.currently?(state, T.Delim, ".") -> N.Class.parse(state)
+      State.currently?(state, T.OpenSquare) -> N.Attribute.parse(state)
+      State.currently?(state, T.Colon) -> N.Pseudo.parse(state)
+      State.currently?(state, T.Function) && String.downcase(state.token.value) == "not" -> N.Negation.parse(state)
       true -> {state, nil}
     end
   end

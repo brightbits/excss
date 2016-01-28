@@ -1,8 +1,10 @@
 defmodule ExCss.Parser.Nodes.Hash do
   alias ExCss.Utils.PrettyPrint
+
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes
-  alias ExCss.Lexer.Tokens
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
+
   defstruct value: nil
 
   def pretty_print(hash, indent) do
@@ -13,8 +15,8 @@ defmodule ExCss.Parser.Nodes.Hash do
 
   def parse(state) do
     state |> State.debug("-- CONSUMING A HASH --")
-    if State.currently?(state, Tokens.Hash) do
-      {State.consume(state), %Nodes.Hash{value: state.token.value}}
+    if State.currently?(state, T.Hash) do
+      {State.consume(state), %N.Hash{value: state.token.value}}
     else
       {state, nil}
     end

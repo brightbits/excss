@@ -2,26 +2,26 @@ defmodule ExCss.Parser.Nodes.NegationTest do
   use Pavlov.Case, async: true
   import Pavlov.Syntax.Expect
 
-  alias ExCss.Lexer.Tokens
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
 
   describe ".parse" do
     context "has the not function" do
       context "type selector" do
         it "parses correctly" do
           tokens = [
-            %Tokens.Function{value: "NoT"},
-            %Tokens.Whitespace{},
-            %Tokens.Id{value: "h1"},
-            %Tokens.Whitespace{},
-            %Tokens.CloseParenthesis{}
+            %T.Function{value: "NoT"},
+            %T.Whitespace{},
+            %T.Id{value: "h1"},
+            %T.Whitespace{},
+            %T.CloseParenthesis{}
           ]
 
-          {_, negation} = Nodes.Negation.parse(State.new(tokens))
+          {_, negation} = N.Negation.parse(State.new(tokens))
 
-          expect(negation) |> to_eq(%Nodes.Negation{
-            value: %Nodes.TypeSelector{
+          expect(negation) |> to_eq(%N.Negation{
+            value: %N.TypeSelector{
               value: "h1"
             }
           })
@@ -31,15 +31,15 @@ defmodule ExCss.Parser.Nodes.NegationTest do
       context "universal selector" do
         it "parses correctly" do
           tokens = [
-            %Tokens.Function{value: "not"},
-            %Tokens.Delim{value: "*"},
-            %Tokens.CloseParenthesis{}
+            %T.Function{value: "not"},
+            %T.Delim{value: "*"},
+            %T.CloseParenthesis{}
           ]
 
-          {_, negation} = Nodes.Negation.parse(State.new(tokens))
+          {_, negation} = N.Negation.parse(State.new(tokens))
 
-          expect(negation) |> to_eq(%Nodes.Negation{
-            value: %Nodes.UniversalSelector{}
+          expect(negation) |> to_eq(%N.Negation{
+            value: %N.UniversalSelector{}
           })
         end
       end
@@ -47,16 +47,16 @@ defmodule ExCss.Parser.Nodes.NegationTest do
       context "hash" do
         it "parses correctly" do
           tokens = [
-            %Tokens.Function{value: "NoT"},
-            %Tokens.Hash{value: "container"},
-            %Tokens.Whitespace{},
-            %Tokens.CloseParenthesis{}
+            %T.Function{value: "NoT"},
+            %T.Hash{value: "container"},
+            %T.Whitespace{},
+            %T.CloseParenthesis{}
           ]
 
-          {_, negation} = Nodes.Negation.parse(State.new(tokens))
+          {_, negation} = N.Negation.parse(State.new(tokens))
 
-          expect(negation) |> to_eq(%Nodes.Negation{
-            value: %Nodes.Hash{value: "container"}
+          expect(negation) |> to_eq(%N.Negation{
+            value: %N.Hash{value: "container"}
           })
         end
       end
@@ -64,17 +64,17 @@ defmodule ExCss.Parser.Nodes.NegationTest do
       context "class" do
         it "parses correctly" do
           tokens = [
-            %Tokens.Function{value: "NoT"},
-            %Tokens.Delim{value: "."},
-            %Tokens.Id{value: "my-class"},
-            %Tokens.Whitespace{},
-            %Tokens.CloseParenthesis{}
+            %T.Function{value: "NoT"},
+            %T.Delim{value: "."},
+            %T.Id{value: "my-class"},
+            %T.Whitespace{},
+            %T.CloseParenthesis{}
           ]
 
-          {_, negation} = Nodes.Negation.parse(State.new(tokens))
+          {_, negation} = N.Negation.parse(State.new(tokens))
 
-          expect(negation) |> to_eq(%Nodes.Negation{
-            value: %Nodes.Class{value: "my-class"}
+          expect(negation) |> to_eq(%N.Negation{
+            value: %N.Class{value: "my-class"}
           })
         end
       end
@@ -82,17 +82,17 @@ defmodule ExCss.Parser.Nodes.NegationTest do
       context "attrib" do
         it "parses correctly" do
           tokens = [
-            %Tokens.Function{value: "NoT"},
-            %Tokens.OpenSquare{},
-            %Tokens.Id{value: "attribute"},
-            %Tokens.CloseSquare{},
-            %Tokens.CloseParenthesis{}
+            %T.Function{value: "NoT"},
+            %T.OpenSquare{},
+            %T.Id{value: "attribute"},
+            %T.CloseSquare{},
+            %T.CloseParenthesis{}
           ]
 
-          {_, negation} = Nodes.Negation.parse(State.new(tokens))
+          {_, negation} = N.Negation.parse(State.new(tokens))
 
-          expect(negation) |> to_eq(%Nodes.Negation{
-            value: %Nodes.Attribute{value: "attribute"}
+          expect(negation) |> to_eq(%N.Negation{
+            value: %N.Attribute{value: "attribute"}
           })
         end
       end
@@ -100,17 +100,17 @@ defmodule ExCss.Parser.Nodes.NegationTest do
       context "pseudo" do
         it "parses correctly" do
           tokens = [
-            %Tokens.Function{value: "NoT"},
-            %Tokens.Colon{},
-            %Tokens.Colon{},
-            %Tokens.Id{value: "first-child"},
-            %Tokens.CloseParenthesis{}
+            %T.Function{value: "NoT"},
+            %T.Colon{},
+            %T.Colon{},
+            %T.Id{value: "first-child"},
+            %T.CloseParenthesis{}
           ]
 
-          {_, negation} = Nodes.Negation.parse(State.new(tokens))
+          {_, negation} = N.Negation.parse(State.new(tokens))
 
-          expect(negation) |> to_eq(%Nodes.Negation{
-            value: %Nodes.Pseudo{value: "first-child", type: :element}
+          expect(negation) |> to_eq(%N.Negation{
+            value: %N.Pseudo{value: "first-child", type: :element}
           })
         end
       end
@@ -119,12 +119,12 @@ defmodule ExCss.Parser.Nodes.NegationTest do
     context "doesn't have the not function" do
       it "returns nil" do
         tokens = [
-          %Tokens.Function{value: "n0t"},
-          %Tokens.Whitespace{},
-          %Tokens.Id{value: "h1"}
+          %T.Function{value: "n0t"},
+          %T.Whitespace{},
+          %T.Id{value: "h1"}
         ]
 
-        {_, hash} = Nodes.Negation.parse(State.new(tokens))
+        {_, hash} = N.Negation.parse(State.new(tokens))
 
         expect(hash) |> to_be_nil
       end
@@ -133,12 +133,12 @@ defmodule ExCss.Parser.Nodes.NegationTest do
     context "missing a closing parenthesis" do
       it "returns nil" do
         tokens = [
-          %Tokens.Function{value: "not"},
-          %Tokens.Whitespace{},
-          %Tokens.Id{value: "h1"}
+          %T.Function{value: "not"},
+          %T.Whitespace{},
+          %T.Id{value: "h1"}
         ]
 
-        {_, hash} = Nodes.Negation.parse(State.new(tokens))
+        {_, hash} = N.Negation.parse(State.new(tokens))
 
         expect(hash) |> to_be_nil
       end
@@ -147,13 +147,13 @@ defmodule ExCss.Parser.Nodes.NegationTest do
     context "invalid arg" do
       it "returns nil" do
         tokens = [
-          %Tokens.Function{value: "not"},
-          %Tokens.Whitespace{},
-          %Tokens.Number{value: 42},
-          %Tokens.CloseParenthesis{}
+          %T.Function{value: "not"},
+          %T.Whitespace{},
+          %T.Number{value: 42},
+          %T.CloseParenthesis{}
         ]
 
-        {_, hash} = Nodes.Negation.parse(State.new(tokens))
+        {_, hash} = N.Negation.parse(State.new(tokens))
 
         expect(hash) |> to_be_nil
       end

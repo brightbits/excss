@@ -1,7 +1,9 @@
 defmodule ExCss.Parser.Nodes.Stylesheet do
   alias ExCss.Utils.PrettyPrint
+
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes
+  alias ExCss.Parser.Nodes, as: N
+
   defstruct value: nil
 
   def pretty_print(stylesheet), do: pretty_print(stylesheet, 0)
@@ -22,8 +24,8 @@ defmodule ExCss.Parser.Nodes.Stylesheet do
     # Return the stylesheet.
     state |> State.debug("-- PARSING STYLESHEET --")
 
-    {_, rule_list} = Nodes.RuleList.parse(state, true)
+    {_, rule_list} = N.RuleList.parse(state, true)
 
-    {state, %Nodes.Stylesheet{value: rule_list}}
+    {state, %N.Stylesheet{value: rule_list}}
   end
 end

@@ -1,8 +1,10 @@
 defmodule ExCss.Parser.Nodes.Class do
   alias ExCss.Utils.PrettyPrint
+
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes
-  alias ExCss.Lexer.Tokens
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
+
   defstruct value: nil
 
   def pretty_print(class, indent) do
@@ -12,8 +14,8 @@ defmodule ExCss.Parser.Nodes.Class do
   def parse(state) do
     state = state |> State.consume
 
-    if State.currently?(state, Tokens.Id) do
-      {State.consume(state), %Nodes.Class{value: state.token.value}}
+    if State.currently?(state, T.Id) do
+      {State.consume(state), %N.Class{value: state.token.value}}
     else
       {state, nil}
     end

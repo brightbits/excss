@@ -2,80 +2,80 @@ defmodule ExCss.Parser.Nodes.StylesheetTest do
   use Pavlov.Case, async: true
   import Pavlov.Syntax.Expect
 
-  alias ExCss.Lexer.Tokens
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
 
   describe ".parse" do
     context "a few rules" do
       it "parses them correctly" do
         tokens = [
-          %Tokens.Whitespace{},
-          %Tokens.Hash{id: true, value: "test-123"},
-          %Tokens.Whitespace{},
-          %Tokens.Id{value: "test 1"},
-          %Tokens.Whitespace{},
-          %Tokens.Id{value: "test 3"},
-          %Tokens.Whitespace{},
-          %Tokens.OpenCurly{},
-          %Tokens.Id{value: "something"},
-          %Tokens.Whitespace{},
-          %Tokens.CloseCurly{},
-          %Tokens.Whitespace{},
-          %Tokens.Hash{id: true, value: "test-123"},
-          %Tokens.Whitespace{},
-          %Tokens.Delim{value: "."},
-          %Tokens.Id{value: "test-1"},
-          %Tokens.Comma{},
-          %Tokens.Delim{value: "."},
-          %Tokens.Id{value: "test 3"},
-          %Tokens.Whitespace{},
-          %Tokens.OpenCurly{},
-          %Tokens.Whitespace{},
-          %Tokens.Id{value: "something-else"},
-          %Tokens.Whitespace{},
-          %Tokens.CloseCurly{},
-          %Tokens.Whitespace{}
+          %T.Whitespace{},
+          %T.Hash{id: true, value: "test-123"},
+          %T.Whitespace{},
+          %T.Id{value: "test 1"},
+          %T.Whitespace{},
+          %T.Id{value: "test 3"},
+          %T.Whitespace{},
+          %T.OpenCurly{},
+          %T.Id{value: "something"},
+          %T.Whitespace{},
+          %T.CloseCurly{},
+          %T.Whitespace{},
+          %T.Hash{id: true, value: "test-123"},
+          %T.Whitespace{},
+          %T.Delim{value: "."},
+          %T.Id{value: "test-1"},
+          %T.Comma{},
+          %T.Delim{value: "."},
+          %T.Id{value: "test 3"},
+          %T.Whitespace{},
+          %T.OpenCurly{},
+          %T.Whitespace{},
+          %T.Id{value: "something-else"},
+          %T.Whitespace{},
+          %T.CloseCurly{},
+          %T.Whitespace{}
         ]
 
-        {_, stylesheet} = ExCss.Parser.Nodes.Stylesheet.parse(State.new(tokens))
+        {_, stylesheet} = N.Stylesheet.parse(State.new(tokens))
 
-        expect(stylesheet) |> to_eq(%Nodes.Stylesheet{
-          value: %Nodes.RuleList{
+        expect(stylesheet) |> to_eq(%N.Stylesheet{
+          value: %N.RuleList{
             rules: {
-              %Nodes.QualifiedRule{
+              %N.QualifiedRule{
                 prelude: {
-                  %Tokens.Hash{id: true, value: "test-123"},
-                  %Tokens.Whitespace{},
-                  %Tokens.Id{value: "test 1"},
-                  %Tokens.Whitespace{},
-                  %Tokens.Id{value: "test 3"},
-                  %Tokens.Whitespace{}
+                  %T.Hash{id: true, value: "test-123"},
+                  %T.Whitespace{},
+                  %T.Id{value: "test 1"},
+                  %T.Whitespace{},
+                  %T.Id{value: "test 3"},
+                  %T.Whitespace{}
                 },
-                block: %Nodes.SimpleBlock{
-                  associated_token: %Tokens.OpenCurly{},
+                block: %N.SimpleBlock{
+                  associated_token: %T.OpenCurly{},
                   value: {
-                    %Tokens.Id{value: "something"},
-                    %Tokens.Whitespace{},
+                    %T.Id{value: "something"},
+                    %T.Whitespace{},
                   }
                 }
               },
-              %Nodes.QualifiedRule{
+              %N.QualifiedRule{
                 prelude: {
-                  %Tokens.Hash{id: true, value: "test-123"},
-                  %Tokens.Whitespace{},
-                  %Tokens.Delim{value: "."},
-                  %Tokens.Id{value: "test-1"},
-                  %Tokens.Comma{},
-                  %Tokens.Delim{value: "."},
-                  %Tokens.Id{value: "test 3"},
-                  %Tokens.Whitespace{}
+                  %T.Hash{id: true, value: "test-123"},
+                  %T.Whitespace{},
+                  %T.Delim{value: "."},
+                  %T.Id{value: "test-1"},
+                  %T.Comma{},
+                  %T.Delim{value: "."},
+                  %T.Id{value: "test 3"},
+                  %T.Whitespace{}
                 },
-                block: %Nodes.SimpleBlock{
-                  associated_token: %Tokens.OpenCurly{},
+                block: %N.SimpleBlock{
+                  associated_token: %T.OpenCurly{},
                   value: {
-                    %Tokens.Id{value: "something-else"},
-                    %Tokens.Whitespace{}
+                    %T.Id{value: "something-else"},
+                    %T.Whitespace{}
                   }
                 }
               }

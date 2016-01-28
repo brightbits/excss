@@ -1,8 +1,10 @@
 defmodule ExCss.Parser.Nodes.Pseudo do
   alias ExCss.Utils.PrettyPrint
+
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes
-  alias ExCss.Lexer.Tokens
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
+
   defstruct value: nil, type: nil, function: nil
 
   def pretty_print(pseudo, indent) do
@@ -36,21 +38,21 @@ defmodule ExCss.Parser.Nodes.Pseudo do
     state |> State.debug("-- CONSUMING A PSEUDO --")
     state = State.consume(state) # :
 
-    pseudo = %Nodes.Pseudo{type: :class}
+    pseudo = %N.Pseudo{type: :class}
 
     State.debug(state, "Currently: #{inspect state.token}")
 
-    if State.currently?(state, Tokens.Colon) do
+    if State.currently?(state, T.Colon) do
       State.debug(state, "Got another colon, now: #{inspect state.token}")
       state = State.consume(state) # :?
       pseudo = %{pseudo | type: :element} # |
     end
 
-    if State.currently?(state, [Tokens.Id, Tokens.Function]) do
+    if State.currently?(state, [T.Id, T.Function]) do
       State.debug(state, "Id or function, now: #{inspect state.token}")
       pseudo = %{pseudo | value: state.token.value} # |
 
-      if State.currently?(state, Tokens.Function) do # functional_pseudo
+      if State.currently?(state, T.Function) do # functional_pseudo
         State.debug(state, "In the function: #{state.token.value}")
         {state, expression} =
           state
@@ -58,7 +60,7 @@ defmodule ExCss.Parser.Nodes.Pseudo do
           |> State.consume_whitespace # S*
           |> consume_expression # expression
 
-        if expression && State.currently?(state, Tokens.CloseParenthesis) do # )
+        if expression && State.currently?(state, T.CloseParenthesis) do # )
           {State.consume(state), %{pseudo | type: :function, function: expression}} # |
         else
           {state, nil}
@@ -80,7 +82,7 @@ defmodule ExCss.Parser.Nodes.Pseudo do
         |> Enum.reverse
         |> List.to_tuple
     end
-    
+
     {state, components}
   end
 
@@ -105,7 +107,7 @@ defmodule ExCss.Parser.Nodes.Pseudo do
   end
 
   defp consume_an_expression_component(state) do
-    if State.currently?(state, Tokens.Delim, "+") || State.currently?(state, Tokens.Delim, "-") || State.currently?(state, [Tokens.Whitespace, Tokens.Dimension, Tokens.Number, Tokens.String, Tokens.Id]) do
+    if State.currently?(state, T.Delim, "+") || State.currently?(state, T.Delim, "-") || State.currently?(state, [T.Whitespace, T.Dimension, T.Number, T.String, T.Id]) do
       {State.consume(state), state.token}
     else
       {state, nil}

@@ -2,53 +2,54 @@ defmodule ExCss.Parser.Nodes.SimpleBlockTest do
   use Pavlov.Case, async: true
   import Pavlov.Syntax.Expect
 
-  alias ExCss.Lexer.Tokens
   alias ExCss.Parser.State
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
 
   describe ".parse" do
     context "with {" do
       it "parses it correctly" do
         tokens = [
-          %Tokens.OpenCurly{},
-          %Tokens.Id{value: "test 1"},
-          %Tokens.Id{value: "test 2"},
-          %Tokens.Id{value: "test 3"},
-          %Tokens.CloseCurly{}
+          %T.OpenCurly{},
+          %T.Id{value: "test 1"},
+          %T.Id{value: "test 2"},
+          %T.Id{value: "test 3"},
+          %T.CloseCurly{}
         ]
 
-        {state, simple_block} = ExCss.Parser.Nodes.SimpleBlock.parse(State.new(tokens))
+        {state, simple_block} = N.SimpleBlock.parse(State.new(tokens))
 
-        expect(simple_block) |> to_eq(%ExCss.Parser.Nodes.SimpleBlock{
-          associated_token: %Tokens.OpenCurly{},
+        expect(simple_block) |> to_eq(%N.SimpleBlock{
+          associated_token: %T.OpenCurly{},
           value: {
-            %Tokens.Id{value: "test 1"},
-            %Tokens.Id{value: "test 2"},
-            %Tokens.Id{value: "test 3"}
+            %T.Id{value: "test 1"},
+            %T.Id{value: "test 2"},
+            %T.Id{value: "test 3"}
           }
         })
 
-        expect(state.token) |> to_eq(%Tokens.EndOfFile{})
+        expect(state.token) |> to_eq(%T.EndOfFile{})
       end
     end
 
     context "with [" do
       it "parses it correctly" do
         tokens = [
-          %Tokens.OpenSquare{},
-          %Tokens.Id{value: "test 1"},
-          %Tokens.Id{value: "test 2"},
-          %Tokens.Id{value: "test 3"},
-          %Tokens.CloseSquare{}
+          %T.OpenSquare{},
+          %T.Id{value: "test 1"},
+          %T.Id{value: "test 2"},
+          %T.Id{value: "test 3"},
+          %T.CloseSquare{}
         ]
 
-        {_, simple_block} = ExCss.Parser.Nodes.SimpleBlock.parse(State.new(tokens))
+        {_, simple_block} = N.SimpleBlock.parse(State.new(tokens))
 
-        expect(simple_block) |> to_eq(%ExCss.Parser.Nodes.SimpleBlock{
-          associated_token: %Tokens.OpenSquare{},
+        expect(simple_block) |> to_eq(%N.SimpleBlock{
+          associated_token: %T.OpenSquare{},
           value: {
-            %Tokens.Id{value: "test 1"},
-            %Tokens.Id{value: "test 2"},
-            %Tokens.Id{value: "test 3"}
+            %T.Id{value: "test 1"},
+            %T.Id{value: "test 2"},
+            %T.Id{value: "test 3"}
           }
         })
       end
@@ -57,21 +58,21 @@ defmodule ExCss.Parser.Nodes.SimpleBlockTest do
     context "with (" do
       it "parses it correctly" do
         tokens = [
-          %Tokens.OpenParenthesis{},
-          %Tokens.Id{value: "test 1"},
-          %Tokens.Id{value: "test 2"},
-          %Tokens.Id{value: "test 3"},
-          %Tokens.CloseParenthesis{}
+          %T.OpenParenthesis{},
+          %T.Id{value: "test 1"},
+          %T.Id{value: "test 2"},
+          %T.Id{value: "test 3"},
+          %T.CloseParenthesis{}
         ]
 
-        {_, simple_block} = ExCss.Parser.Nodes.SimpleBlock.parse(State.new(tokens))
+        {_, simple_block} = N.SimpleBlock.parse(State.new(tokens))
 
-        expect(simple_block) |> to_eq(%ExCss.Parser.Nodes.SimpleBlock{
-          associated_token: %Tokens.OpenParenthesis{},
+        expect(simple_block) |> to_eq(%N.SimpleBlock{
+          associated_token: %T.OpenParenthesis{},
           value: {
-            %Tokens.Id{value: "test 1"},
-            %Tokens.Id{value: "test 2"},
-            %Tokens.Id{value: "test 3"}
+            %T.Id{value: "test 1"},
+            %T.Id{value: "test 2"},
+            %T.Id{value: "test 3"}
           }
         })
       end
@@ -80,24 +81,24 @@ defmodule ExCss.Parser.Nodes.SimpleBlockTest do
     context "it doesn't close with its mirror" do
       it "just consumes everything and returns it" do
         tokens = [
-          %Tokens.OpenParenthesis{},
-          %Tokens.Id{value: "test 1"},
-          %Tokens.Id{value: "test 2"},
-          %Tokens.CloseSquare{},
-          %Tokens.CloseCurly{},
-          %Tokens.Id{value: "test 3"}
+          %T.OpenParenthesis{},
+          %T.Id{value: "test 1"},
+          %T.Id{value: "test 2"},
+          %T.CloseSquare{},
+          %T.CloseCurly{},
+          %T.Id{value: "test 3"}
         ]
 
-        {_, simple_block} = ExCss.Parser.Nodes.SimpleBlock.parse(State.new(tokens))
+        {_, simple_block} = N.SimpleBlock.parse(State.new(tokens))
 
-        expect(simple_block) |> to_eq(%ExCss.Parser.Nodes.SimpleBlock{
-          associated_token: %Tokens.OpenParenthesis{},
+        expect(simple_block) |> to_eq(%N.SimpleBlock{
+          associated_token: %T.OpenParenthesis{},
           value: {
-            %Tokens.Id{value: "test 1"},
-            %Tokens.Id{value: "test 2"},
-            %Tokens.CloseSquare{},
-            %Tokens.CloseCurly{},
-            %Tokens.Id{value: "test 3"}
+            %T.Id{value: "test 1"},
+            %T.Id{value: "test 2"},
+            %T.CloseSquare{},
+            %T.CloseCurly{},
+            %T.Id{value: "test 3"}
           }
         })
       end

@@ -1,8 +1,10 @@
 defmodule ExCss.Parser.Nodes.Combinator do
   alias ExCss.Utils.PrettyPrint
+
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes
-  alias ExCss.Lexer.Tokens
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
+
   defstruct type: nil, left: nil, right: nil
 
   def pretty_print(combinator, indent) do
@@ -25,14 +27,14 @@ defmodule ExCss.Parser.Nodes.Combinator do
     state |> State.debug("-- CONSUMING A COMBINATOR --")
 
     combinator = cond do
-      State.currently?(state, Tokens.Delim, "+") -> # PLUS
-        %Nodes.Combinator{type: :adjacent_sibling}
-      State.currently?(state, Tokens.Delim, ">") -> # GREATER
-        %Nodes.Combinator{type: :child}
-      State.currently?(state, Tokens.Delim, "~") -> # TILDE
-        %Nodes.Combinator{type: :general_sibling}
-      State.currently?(state, Tokens.Whitespace) -> # S
-        %Nodes.Combinator{type: :descendant}
+      State.currently?(state, T.Delim, "+") -> # PLUS
+        %N.Combinator{type: :adjacent_sibling}
+      State.currently?(state, T.Delim, ">") -> # GREATER
+        %N.Combinator{type: :child}
+      State.currently?(state, T.Delim, "~") -> # TILDE
+        %N.Combinator{type: :general_sibling}
+      State.currently?(state, T.Whitespace) -> # S
+        %N.Combinator{type: :descendant}
       true ->
         nil
     end

@@ -1,7 +1,10 @@
 defmodule ExCss.Parser.Nodes.Function do
   alias ExCss.Utils.PrettyPrint
+
   alias ExCss.Parser.State
-  alias ExCss.Lexer.Tokens
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
+
   defstruct name: nil, value: {}
 
   def pretty_print(function, indent) do
@@ -20,7 +23,7 @@ defmodule ExCss.Parser.Nodes.Function do
   end
 
   defp consume_a_function(state, name) when is_binary(name) do
-    {state, function} = consume_a_function(state, %ExCss.Parser.Nodes.Function{name: name, value: []})
+    {state, function} = consume_a_function(state, %N.Function{name: name, value: []})
 
     value =
       function.value
@@ -40,7 +43,7 @@ defmodule ExCss.Parser.Nodes.Function do
     # Return the function.
     # anything else
     # Reconsume the current input token. Consume a component value and append the returned value to the function’s value.
-    if State.currently?(state, [Tokens.EndOfFile, Tokens.CloseParenthesis]) do
+    if State.currently?(state, [T.EndOfFile, T.CloseParenthesis]) do
       {State.consume(state), function}
     else
       {state, component_value} = State.consume_component_value(state)

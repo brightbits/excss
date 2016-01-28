@@ -2,30 +2,30 @@ defmodule ExCss.Parser.Nodes.HashTest do
   use Pavlov.Case, async: true
   import Pavlov.Syntax.Expect
 
-  alias ExCss.Lexer.Tokens
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
 
   describe ".parse" do
     context "has a hash" do
       it "parses correctly" do
         tokens = [
-          %Tokens.Hash{value: "hello"}
+          %T.Hash{value: "hello"}
         ]
 
-        {_, hash} = Nodes.Hash.parse(State.new(tokens))
+        {_, hash} = N.Hash.parse(State.new(tokens))
 
-        expect(hash) |> to_eq(%Nodes.Hash{value: "hello"})
+        expect(hash) |> to_eq(%N.Hash{value: "hello"})
       end
     end
 
     context "doesn't have an hash" do
       it "returns nil" do
         tokens = [
-          %Tokens.Number{value: 123}
+          %T.Number{value: 123}
         ]
 
-        {_, hash} = Nodes.Hash.parse(State.new(tokens))
+        {_, hash} = N.Hash.parse(State.new(tokens))
 
         expect(hash) |> to_be_nil
       end

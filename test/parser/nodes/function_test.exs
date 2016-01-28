@@ -2,28 +2,29 @@ defmodule ExCss.Parser.Nodes.FunctionTest do
   use Pavlov.Case, async: true
   import Pavlov.Syntax.Expect
 
-  alias ExCss.Lexer.Tokens
   alias ExCss.Parser.State
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
 
   describe ".parse" do
     context "with a correct ending close parenthesis" do
       it "parses it correctly" do
         tokens = [
-          %Tokens.Function{value: "test-123"},
-          %Tokens.Id{value: "test 1"},
-          %Tokens.Id{value: "test 2"},
-          %Tokens.Id{value: "test 3"},
-          %Tokens.CloseParenthesis{}
+          %T.Function{value: "test-123"},
+          %T.Id{value: "test 1"},
+          %T.Id{value: "test 2"},
+          %T.Id{value: "test 3"},
+          %T.CloseParenthesis{}
         ]
 
-        {_, function} = ExCss.Parser.Nodes.Function.parse(State.new(tokens))
+        {_, function} = N.Function.parse(State.new(tokens))
 
-        expect(function) |> to_eq(%ExCss.Parser.Nodes.Function{
+        expect(function) |> to_eq(%N.Function{
           name: "test-123",
           value: {
-            %Tokens.Id{value: "test 1"},
-            %Tokens.Id{value: "test 2"},
-            %Tokens.Id{value: "test 3"}
+            %T.Id{value: "test 1"},
+            %T.Id{value: "test 2"},
+            %T.Id{value: "test 3"}
           }
         })
       end
@@ -32,20 +33,20 @@ defmodule ExCss.Parser.Nodes.FunctionTest do
     context "doesn't close" do
       it "just consumes everything and returns it" do
         tokens = [
-          %Tokens.Function{value: "test-123"},
-          %Tokens.Id{value: "test 1"},
-          %Tokens.Id{value: "test 2"},
-          %Tokens.Id{value: "test 3"}
+          %T.Function{value: "test-123"},
+          %T.Id{value: "test 1"},
+          %T.Id{value: "test 2"},
+          %T.Id{value: "test 3"}
         ]
 
-        {_, simple_block} = ExCss.Parser.Nodes.Function.parse(State.new(tokens))
+        {_, simple_block} = N.Function.parse(State.new(tokens))
 
-        expect(simple_block) |> to_eq(%ExCss.Parser.Nodes.Function{
+        expect(simple_block) |> to_eq(%N.Function{
           name: "test-123",
           value: {
-            %Tokens.Id{value: "test 1"},
-            %Tokens.Id{value: "test 2"},
-            %Tokens.Id{value: "test 3"}
+            %T.Id{value: "test 1"},
+            %T.Id{value: "test 2"},
+            %T.Id{value: "test 3"}
           }
         })
       end

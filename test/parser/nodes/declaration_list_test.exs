@@ -79,36 +79,95 @@ defmodule ExCss.Parser.Nodes.DeclarationListTest do
       end
     end
 
-    context "single at rule" do
-      it "parses it correctly" do
-        tokens = [
-          %Tokens.AtKeyword{value: "font-face"},
-          %Tokens.Whitespace{},
-          %Tokens.OpenCurly{},
-          %Tokens.Colon{},
-          %Tokens.Whitespace{},
-          %Tokens.Id{value: "test"},
-          %Tokens.CloseCurly{}
-        ]
+    context "at rules" do
+      context "single at rule" do
+        it "parses it correctly" do
+          tokens = [
+            %Tokens.AtKeyword{value: "font-face"},
+            %Tokens.Whitespace{},
+            %Tokens.OpenCurly{},
+            %Tokens.Colon{},
+            %Tokens.Whitespace{},
+            %Tokens.Id{value: "test"},
+            %Tokens.CloseCurly{}
+          ]
 
-        {_, declaration_list} = Nodes.DeclarationList.parse(State.new(tokens))
+          {_, declaration_list} = Nodes.DeclarationList.parse(State.new(tokens))
 
-        expect(declaration_list) |> to_eq(%Nodes.DeclarationList{
-          value: {
-            %Nodes.AtRule{
-              name: "font-face",
-              prelude: {},
-              block: %Nodes.SimpleBlock{
-                associated_token: %Tokens.OpenCurly{},
-                value: {
-                  %Tokens.Colon{},
-                  %Tokens.Whitespace{},
-                  %Tokens.Id{value: "test"}
+          expect(declaration_list) |> to_eq(%Nodes.DeclarationList{
+            value: {
+              %Nodes.AtRule{
+                name: "font-face",
+                prelude: {},
+                block: %Nodes.SimpleBlock{
+                  associated_token: %Tokens.OpenCurly{},
+                  value: {
+                    %Tokens.Colon{},
+                    %Tokens.Whitespace{},
+                    %Tokens.Id{value: "test"}
+                  }
                 }
               }
             }
-          }
-        })
+          })
+        end
+      end
+
+      context "with declarations around it" do
+        it "parses it correctly" do
+          tokens = [
+            %Tokens.Whitespace{},
+            %Tokens.Id{value: "cat"},
+            %Tokens.Colon{},
+            %Tokens.Number{value: 4, original_value: "4"},
+            %Tokens.Semicolon{},
+            %Tokens.AtKeyword{value: "font-face"},
+            %Tokens.Whitespace{},
+            %Tokens.OpenCurly{},
+            %Tokens.Colon{},
+            %Tokens.Whitespace{},
+            %Tokens.Id{value: "test"},
+            %Tokens.CloseCurly{},
+            %Tokens.Id{value: "dog"},
+            %Tokens.Colon{},
+            %Tokens.Number{value: 5, original_value: "5"},
+            %Tokens.Delim{value: "!"},
+            %Tokens.Id{value: "IMPORTANT"}
+          ]
+
+          {_, declaration_list} = Nodes.DeclarationList.parse(State.new(tokens))
+
+          expect(declaration_list) |> to_eq(%Nodes.DeclarationList{
+            value: {
+              %Nodes.Declaration{
+                important: false,
+                name: "cat",
+                value: {
+                  %Tokens.Number{value: 4, original_value: "4"}
+                }
+              },
+              %Nodes.AtRule{
+                name: "font-face",
+                prelude: {},
+                block: %Nodes.SimpleBlock{
+                  associated_token: %Tokens.OpenCurly{},
+                  value: {
+                    %Tokens.Colon{},
+                    %Tokens.Whitespace{},
+                    %Tokens.Id{value: "test"}
+                  }
+                }
+              },
+              %Nodes.Declaration{
+                important: true,
+                name: "dog",
+                value: {
+                  %Tokens.Number{value: 5, original_value: "5"}
+                }
+              }
+            }
+          })
+        end
       end
     end
 

@@ -2,22 +2,22 @@ defmodule ExCss.Parser.Nodes.AttributeTest do
   use Pavlov.Case, async: true
   import Pavlov.Syntax.Expect
 
-  alias ExCss.Lexer.Tokens
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
 
   describe ".parse" do
     context "just has attribute" do
       it "parses correctly" do
         tokens = [
-          %Tokens.OpenSquare{},
-          %Tokens.Id{value: "test"},
-          %Tokens.CloseSquare{}
+          %T.OpenSquare{},
+          %T.Id{value: "test"},
+          %T.CloseSquare{}
         ]
 
-        {_, attribute} = Nodes.Attribute.parse(State.new(tokens))
+        {_, attribute} = N.Attribute.parse(State.new(tokens))
 
-        expect(attribute) |> to_eq(%Nodes.Attribute{
+        expect(attribute) |> to_eq(%N.Attribute{
           value: "test",
           match_token: nil,
           match_value: nil
@@ -27,11 +27,11 @@ defmodule ExCss.Parser.Nodes.AttributeTest do
       context "not closed properly" do
         it "returns nil" do
           tokens = [
-            %Tokens.OpenSquare{},
-            %Tokens.Id{value: "test"}
+            %T.OpenSquare{},
+            %T.Id{value: "test"}
           ]
 
-          {_, attribute} = Nodes.Attribute.parse(State.new(tokens))
+          {_, attribute} = N.Attribute.parse(State.new(tokens))
 
           expect(attribute) |> to_be_nil
         end
@@ -42,20 +42,20 @@ defmodule ExCss.Parser.Nodes.AttributeTest do
       context "equals" do
         it "parses correctly" do
           tokens = [
-            %Tokens.OpenSquare{},
-            %Tokens.Id{value: "test"},
-            %Tokens.Whitespace{},
-            %Tokens.Delim{value: "="},
-            %Tokens.Whitespace{},
-            %Tokens.String{value: "cats"},
-            %Tokens.CloseSquare{}
+            %T.OpenSquare{},
+            %T.Id{value: "test"},
+            %T.Whitespace{},
+            %T.Delim{value: "="},
+            %T.Whitespace{},
+            %T.String{value: "cats"},
+            %T.CloseSquare{}
           ]
 
-          {_, attribute} = Nodes.Attribute.parse(State.new(tokens))
+          {_, attribute} = N.Attribute.parse(State.new(tokens))
 
-          expect(attribute) |> to_eq(%Nodes.Attribute{
+          expect(attribute) |> to_eq(%N.Attribute{
             value: "test",
-            match_token: %Tokens.Delim{value: "="},
+            match_token: %T.Delim{value: "="},
             match_value: "cats"
           })
         end
@@ -64,20 +64,20 @@ defmodule ExCss.Parser.Nodes.AttributeTest do
       context "prefix match" do
         it "parses correctly" do
           tokens = [
-            %Tokens.OpenSquare{},
-            %Tokens.Id{value: "test"},
-            %Tokens.Whitespace{},
-            %Tokens.PrefixMatch{},
-            %Tokens.Id{value: "horses"},
-            %Tokens.Whitespace{},
-            %Tokens.CloseSquare{}
+            %T.OpenSquare{},
+            %T.Id{value: "test"},
+            %T.Whitespace{},
+            %T.PrefixMatch{},
+            %T.Id{value: "horses"},
+            %T.Whitespace{},
+            %T.CloseSquare{}
           ]
 
-          {_, attribute} = Nodes.Attribute.parse(State.new(tokens))
+          {_, attribute} = N.Attribute.parse(State.new(tokens))
 
-          expect(attribute) |> to_eq(%Nodes.Attribute{
+          expect(attribute) |> to_eq(%N.Attribute{
             value: "test",
-            match_token: %Tokens.PrefixMatch{},
+            match_token: %T.PrefixMatch{},
             match_value: "horses"
           })
         end
@@ -86,18 +86,18 @@ defmodule ExCss.Parser.Nodes.AttributeTest do
       context "suffix match" do
         it "parses correctly" do
           tokens = [
-            %Tokens.OpenSquare{},
-            %Tokens.Id{value: "batman"},
-            %Tokens.SuffixMatch{},
-            %Tokens.Id{value: "carrot"},
-            %Tokens.CloseSquare{}
+            %T.OpenSquare{},
+            %T.Id{value: "batman"},
+            %T.SuffixMatch{},
+            %T.Id{value: "carrot"},
+            %T.CloseSquare{}
           ]
 
-          {_, attribute} = Nodes.Attribute.parse(State.new(tokens))
+          {_, attribute} = N.Attribute.parse(State.new(tokens))
 
-          expect(attribute) |> to_eq(%Nodes.Attribute{
+          expect(attribute) |> to_eq(%N.Attribute{
             value: "batman",
-            match_token: %Tokens.SuffixMatch{},
+            match_token: %T.SuffixMatch{},
             match_value: "carrot"
           })
         end
@@ -106,18 +106,18 @@ defmodule ExCss.Parser.Nodes.AttributeTest do
       context "substring match" do
         it "parses correctly" do
           tokens = [
-            %Tokens.OpenSquare{},
-            %Tokens.Id{value: "batman"},
-            %Tokens.SubstringMatch{},
-            %Tokens.Id{value: "carrot"},
-            %Tokens.CloseSquare{}
+            %T.OpenSquare{},
+            %T.Id{value: "batman"},
+            %T.SubstringMatch{},
+            %T.Id{value: "carrot"},
+            %T.CloseSquare{}
           ]
 
-          {_, attribute} = Nodes.Attribute.parse(State.new(tokens))
+          {_, attribute} = N.Attribute.parse(State.new(tokens))
 
-          expect(attribute) |> to_eq(%Nodes.Attribute{
+          expect(attribute) |> to_eq(%N.Attribute{
             value: "batman",
-            match_token: %Tokens.SubstringMatch{},
+            match_token: %T.SubstringMatch{},
             match_value: "carrot"
           })
         end
@@ -126,18 +126,18 @@ defmodule ExCss.Parser.Nodes.AttributeTest do
       context "include match" do
         it "parses correctly" do
           tokens = [
-            %Tokens.OpenSquare{},
-            %Tokens.Id{value: "batman"},
-            %Tokens.IncludeMatch{},
-            %Tokens.Id{value: "carrot"},
-            %Tokens.CloseSquare{}
+            %T.OpenSquare{},
+            %T.Id{value: "batman"},
+            %T.IncludeMatch{},
+            %T.Id{value: "carrot"},
+            %T.CloseSquare{}
           ]
 
-          {_, attribute} = Nodes.Attribute.parse(State.new(tokens))
+          {_, attribute} = N.Attribute.parse(State.new(tokens))
 
-          expect(attribute) |> to_eq(%Nodes.Attribute{
+          expect(attribute) |> to_eq(%N.Attribute{
             value: "batman",
-            match_token: %Tokens.IncludeMatch{},
+            match_token: %T.IncludeMatch{},
             match_value: "carrot"
           })
         end
@@ -146,18 +146,18 @@ defmodule ExCss.Parser.Nodes.AttributeTest do
       context "dash match" do
         it "parses correctly" do
           tokens = [
-            %Tokens.OpenSquare{},
-            %Tokens.Id{value: "batman"},
-            %Tokens.DashMatch{},
-            %Tokens.Id{value: "carrot"},
-            %Tokens.CloseSquare{}
+            %T.OpenSquare{},
+            %T.Id{value: "batman"},
+            %T.DashMatch{},
+            %T.Id{value: "carrot"},
+            %T.CloseSquare{}
           ]
 
-          {_, attribute} = Nodes.Attribute.parse(State.new(tokens))
+          {_, attribute} = N.Attribute.parse(State.new(tokens))
 
-          expect(attribute) |> to_eq(%Nodes.Attribute{
+          expect(attribute) |> to_eq(%N.Attribute{
             value: "batman",
-            match_token: %Tokens.DashMatch{},
+            match_token: %T.DashMatch{},
             match_value: "carrot"
           })
         end
@@ -166,14 +166,14 @@ defmodule ExCss.Parser.Nodes.AttributeTest do
       context "something else" do
         it "returns nil" do
           tokens = [
-            %Tokens.OpenSquare{},
-            %Tokens.Id{value: "batman"},
-            %Tokens.String{value: "something else"},
-            %Tokens.Id{value: "carrot"},
-            %Tokens.CloseSquare{}
+            %T.OpenSquare{},
+            %T.Id{value: "batman"},
+            %T.String{value: "something else"},
+            %T.Id{value: "carrot"},
+            %T.CloseSquare{}
           ]
 
-          {_, attribute} = Nodes.Attribute.parse(State.new(tokens))
+          {_, attribute} = N.Attribute.parse(State.new(tokens))
 
           expect(attribute) |> to_be_nil
         end
@@ -182,14 +182,14 @@ defmodule ExCss.Parser.Nodes.AttributeTest do
       context "invalid match value" do
         it "returns nil" do
           tokens = [
-            %Tokens.OpenSquare{},
-            %Tokens.Id{value: "batman"},
-            %Tokens.Delim{value: "="},
-            %Tokens.Number{value: 123},
-            %Tokens.CloseSquare{}
+            %T.OpenSquare{},
+            %T.Id{value: "batman"},
+            %T.Delim{value: "="},
+            %T.Number{value: 123},
+            %T.CloseSquare{}
           ]
 
-          {_, attribute} = Nodes.Attribute.parse(State.new(tokens))
+          {_, attribute} = N.Attribute.parse(State.new(tokens))
 
           expect(attribute) |> to_be_nil
         end
@@ -198,13 +198,13 @@ defmodule ExCss.Parser.Nodes.AttributeTest do
       context "invalid close" do
         it "returns nil" do
           tokens = [
-            %Tokens.OpenSquare{},
-            %Tokens.Id{value: "batman"},
-            %Tokens.Delim{value: "="},
-            %Tokens.Id{value: "test"}
+            %T.OpenSquare{},
+            %T.Id{value: "batman"},
+            %T.Delim{value: "="},
+            %T.Id{value: "test"}
           ]
 
-          {_, attribute} = Nodes.Attribute.parse(State.new(tokens))
+          {_, attribute} = N.Attribute.parse(State.new(tokens))
 
           expect(attribute) |> to_be_nil
         end

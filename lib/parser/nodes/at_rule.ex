@@ -1,8 +1,10 @@
 defmodule ExCss.Parser.Nodes.AtRule do
   alias ExCss.Utils.PrettyPrint
-  alias ExCss.Parser.Nodes
+
   alias ExCss.Parser.State
-  alias ExCss.Lexer.Tokens
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
+
   defstruct name: nil, prelude: {}, block: nil
 
   def pretty_print(at_rule, indent) do
@@ -28,7 +30,7 @@ defmodule ExCss.Parser.Nodes.AtRule do
       |> State.consume # step over AtToken
       |> State.consume_whitespace # if the current token is whitespace, step over it
 
-    consume_an_at_rule(state, %ExCss.Parser.Nodes.AtRule{name: name, prelude: []})
+    consume_an_at_rule(state, %N.AtRule{name: name, prelude: []})
   end
   defp consume_an_at_rule(state, rule) do
     # Create a new at-rule with its name set to the value of the current input token,
@@ -47,11 +49,11 @@ defmodule ExCss.Parser.Nodes.AtRule do
     # Reconsume the current input token. Consume a component value. Append the returned value to the at-rule’s prelude.
 
     cond do
-      State.currently?(state, [Tokens.EndOfFile, Tokens.Semicolon]) ->
+      State.currently?(state, [T.EndOfFile, T.Semicolon]) ->
         {State.consume(state), process_prelude(rule)}
 
-      State.currently?(state, Tokens.OpenCurly) ->
-        {state, simple_block} = Nodes.SimpleBlock.parse(state)
+      State.currently?(state, T.OpenCurly) ->
+        {state, simple_block} = N.SimpleBlock.parse(state)
         {state, process_prelude(%{rule | block: simple_block})}
       true ->
         {state, component_value} = State.consume_component_value(state)

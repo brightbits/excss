@@ -1,8 +1,10 @@
 defmodule ExCss.Parser.Nodes.UniversalSelector do
   alias ExCss.Utils.PrettyPrint
+
   alias ExCss.Parser.State
-  alias ExCss.Parser.Nodes
-  alias ExCss.Lexer.Tokens
+  alias ExCss.Parser.Nodes, as: N
+  alias ExCss.Lexer.Tokens, as: T
+
   defstruct []
 
   def pretty_print(_, indent) do
@@ -16,8 +18,8 @@ defmodule ExCss.Parser.Nodes.UniversalSelector do
   defp consume_a_universal_selector(state) do
     state |> State.debug("-- CONSUMING A UNIVERSAL SELECTOR --")
 
-    if State.currently?(state, Tokens.Delim, "*") do
-      {State.consume(state), %Nodes.UniversalSelector{}}
+    if State.currently?(state, T.Delim, "*") do
+      {State.consume(state), %N.UniversalSelector{}}
     else
       {state, nil}
     end
