@@ -42,26 +42,26 @@ defmodule ExCss.Parser.Nodes.StylesheetTest do
 
         expect(stylesheet) |> to_eq(%N.Stylesheet{
           value: %N.RuleList{
-            rules: {
+            rules: [
               %N.QualifiedRule{
-                prelude: {
+                prelude: [
                   %T.Hash{id: true, value: "test-123"},
                   %T.Whitespace{},
                   %T.Id{value: "test 1"},
                   %T.Whitespace{},
                   %T.Id{value: "test 3"},
                   %T.Whitespace{}
-                },
+                ],
                 block: %N.SimpleBlock{
                   associated_token: %T.OpenCurly{},
-                  value: {
+                  value: [
                     %T.Id{value: "something"},
                     %T.Whitespace{},
-                  }
+                  ]
                 }
               },
               %N.QualifiedRule{
-                prelude: {
+                prelude: [
                   %T.Hash{id: true, value: "test-123"},
                   %T.Whitespace{},
                   %T.Delim{value: "."},
@@ -70,16 +70,16 @@ defmodule ExCss.Parser.Nodes.StylesheetTest do
                   %T.Delim{value: "."},
                   %T.Id{value: "test 3"},
                   %T.Whitespace{}
-                },
+                ],
                 block: %N.SimpleBlock{
                   associated_token: %T.OpenCurly{},
-                  value: {
+                  value: [
                     %T.Id{value: "something-else"},
                     %T.Whitespace{}
-                  }
+                  ]
                 }
               }
-            }
+            ]
           }
         })
       end

@@ -25,13 +25,13 @@ defmodule ExCss.Parser.Nodes.AtRuleTest do
 
           expect(function) |> to_eq(%ExCss.Parser.Nodes.AtRule{
             name: "test-123",
-            prelude: {
+            prelude: [
               %T.Id{value: "test 1"},
               %T.Whitespace{},
               %T.Id{value: "test 2"},
               %T.Whitespace{},
               %T.Id{value: "test 3"}
-            }
+            ]
           })
         end
       end
@@ -52,13 +52,13 @@ defmodule ExCss.Parser.Nodes.AtRuleTest do
 
           expect(rule) |> to_eq(%ExCss.Parser.Nodes.AtRule{
             name: "test-123",
-            prelude: {
+            prelude: [
               %T.Id{value: "test 1"},
               %T.Whitespace{},
               %T.Id{value: "test 2"},
               %T.Whitespace{},
               %T.Id{value: "test 3"}
-            }
+            ]
           })
         end
       end
@@ -84,17 +84,17 @@ defmodule ExCss.Parser.Nodes.AtRuleTest do
 
         expect(rule) |> to_eq(%ExCss.Parser.Nodes.AtRule{
           name: "test-123",
-          prelude: {},
+          prelude: [],
           block: %N.SimpleBlock{
             associated_token: %T.OpenCurly{},
-            value: {
+            value: [
               %T.Id{value: "test 1"},
               %T.Whitespace{},
               %T.Id{value: "test 2"},
               %T.Whitespace{},
               %T.Id{value: "test 3"},
               %T.Whitespace{}
-            }
+            ]
           }
         })
       end
@@ -126,24 +126,24 @@ defmodule ExCss.Parser.Nodes.AtRuleTest do
 
         expect(rule) |> to_eq(%ExCss.Parser.Nodes.AtRule{
           name: "test-123",
-          prelude: {
+          prelude: [
             %T.Id{value: "test A"},
             %T.Whitespace{},
             %T.Id{value: "test B"},
             %T.Whitespace{},
             %T.Dimension{value: 42.5, original_value: "42.5", unit: "rem"},
             %T.Whitespace{}
-          },
+          ],
           block: %N.SimpleBlock{
             associated_token: %T.OpenCurly{},
-            value: {
+            value: [
               %T.Id{value: "test 1"},
               %T.Whitespace{},
               %T.Id{value: "test 2"},
               %T.Whitespace{},
               %T.Id{value: "test 3"},
               %T.Whitespace{}
-            }
+            ]
           }
         })
       end

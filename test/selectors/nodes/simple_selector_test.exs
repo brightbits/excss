@@ -44,9 +44,9 @@ defmodule ExCss.Selectors.Nodes.SimpleSelectorTest do
             value: %N.TypeSelector{
               value: "h1"
             },
-            modifiers: {
+            modifiers: [
               %N.Class{value: "title"}
-            }
+            ]
           })
         end
       end
@@ -73,11 +73,11 @@ defmodule ExCss.Selectors.Nodes.SimpleSelectorTest do
             value: %N.TypeSelector{
               value: "em"
             },
-            modifiers: {
+            modifiers: [
               %N.Hash{value: "page_title"},
               %N.Attribute{value: "hat", match_token: %T.DashMatch{}, match_value: "cat"},
               %N.Pseudo{value: "visited", type: :class}
-            }
+            ]
           })
         end
       end
@@ -110,9 +110,9 @@ defmodule ExCss.Selectors.Nodes.SimpleSelectorTest do
 
           expect(simple_selector) |> to_eq(%N.SimpleSelector{
             value: %N.UniversalSelector{},
-            modifiers: {
+            modifiers: [
               %N.Class{value: "title"}
-            }
+            ]
           })
         end
       end
@@ -137,11 +137,11 @@ defmodule ExCss.Selectors.Nodes.SimpleSelectorTest do
 
           expect(simple_selector) |> to_eq(%N.SimpleSelector{
             value: %N.UniversalSelector{},
-            modifiers: {
+            modifiers: [
               %N.Hash{value: "page_title"},
               %N.Attribute{value: "hat", match_token: %T.DashMatch{}, match_value: "cat"},
               %N.Pseudo{value: "visited", type: :class}
-            }
+            ]
           })
         end
       end
@@ -171,9 +171,9 @@ defmodule ExCss.Selectors.Nodes.SimpleSelectorTest do
 
           expect(simple_selector) |> to_eq(%N.SimpleSelector{
             value: %N.UniversalSelector{},
-            modifiers: {
+            modifiers: [
               %N.Class{value: "title"}
-            }
+            ]
           })
         end
       end
@@ -197,11 +197,11 @@ defmodule ExCss.Selectors.Nodes.SimpleSelectorTest do
 
           expect(simple_selector) |> to_eq(%N.SimpleSelector{
             value: %N.UniversalSelector{},
-            modifiers: {
+            modifiers: [
               %N.Hash{value: "page_title"},
               %N.Attribute{value: "hat", match_token: %T.DashMatch{}, match_value: "cat"},
               %N.Pseudo{value: "visited", type: :class}
-            }
+            ]
           })
         end
       end

@@ -21,11 +21,11 @@ defmodule ExCss.Parser.Nodes.SimpleBlockTest do
 
         expect(simple_block) |> to_eq(%N.SimpleBlock{
           associated_token: %T.OpenCurly{},
-          value: {
+          value: [
             %T.Id{value: "test 1"},
             %T.Id{value: "test 2"},
             %T.Id{value: "test 3"}
-          }
+          ]
         })
 
         expect(state.token) |> to_eq(%T.EndOfFile{})
@@ -46,11 +46,11 @@ defmodule ExCss.Parser.Nodes.SimpleBlockTest do
 
         expect(simple_block) |> to_eq(%N.SimpleBlock{
           associated_token: %T.OpenSquare{},
-          value: {
+          value: [
             %T.Id{value: "test 1"},
             %T.Id{value: "test 2"},
             %T.Id{value: "test 3"}
-          }
+          ]
         })
       end
     end
@@ -69,11 +69,11 @@ defmodule ExCss.Parser.Nodes.SimpleBlockTest do
 
         expect(simple_block) |> to_eq(%N.SimpleBlock{
           associated_token: %T.OpenParenthesis{},
-          value: {
+          value: [
             %T.Id{value: "test 1"},
             %T.Id{value: "test 2"},
             %T.Id{value: "test 3"}
-          }
+          ]
         })
       end
     end
@@ -93,13 +93,13 @@ defmodule ExCss.Parser.Nodes.SimpleBlockTest do
 
         expect(simple_block) |> to_eq(%N.SimpleBlock{
           associated_token: %T.OpenParenthesis{},
-          value: {
+          value: [
             %T.Id{value: "test 1"},
             %T.Id{value: "test 2"},
             %T.CloseSquare{},
             %T.CloseCurly{},
             %T.Id{value: "test 3"}
-          }
+          ]
         })
       end
     end

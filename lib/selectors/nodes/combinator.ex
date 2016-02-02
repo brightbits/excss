@@ -5,7 +5,7 @@ defmodule ExCss.Selectors.Nodes.Combinator do
   alias ExCss.Selectors.Nodes, as: N
   alias ExCss.Lexer.Tokens, as: T
 
-  defstruct type: nil, left: nil, right: nil
+  defstruct [:type, :left, :right]
 
   def pretty_print(combinator, indent) do
     PrettyPrint.pretty_out("Combinator #{combinator.type}", indent)

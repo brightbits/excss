@@ -46,36 +46,36 @@ defmodule ExCss.Parser.Nodes.RuleListTest do
         {_, rule_list} = N.RuleList.parse(State.new(tokens))
 
         expect(rule_list) |> to_eq(%N.RuleList{
-          rules: {
+          rules: [
             %N.AtRule{
               name: "charset",
-              prelude: {},
+              prelude: [],
               block: %N.SimpleBlock{
                 associated_token: %T.OpenCurly{},
-                value: {
+                value: [
                   %T.Id{value: "Hey!"}
-                }
+                ]
               }
             },
             %N.QualifiedRule{
-              prelude: {
+              prelude: [
                 %T.Hash{id: true, value: "test-123"},
                 %T.Whitespace{},
                 %T.Id{value: "test 1"},
                 %T.Whitespace{},
                 %T.Id{value: "test 3"},
                 %T.Whitespace{}
-              },
+              ],
               block: %N.SimpleBlock{
                 associated_token: %T.OpenCurly{},
-                value: {
+                value: [
                   %T.Id{value: "something"},
                   %T.Whitespace{},
-                }
+                ]
               }
             },
             %N.QualifiedRule{
-              prelude: {
+              prelude: [
                 %T.Hash{id: true, value: "test-123"},
                 %T.Whitespace{},
                 %T.Delim{value: "."},
@@ -84,16 +84,16 @@ defmodule ExCss.Parser.Nodes.RuleListTest do
                 %T.Delim{value: "."},
                 %T.Id{value: "test 3"},
                 %T.Whitespace{}
-              },
+              ],
               block: %N.SimpleBlock{
                 associated_token: %T.OpenCurly{},
-                value: {
+                value: [
                   %T.Id{value: "something-else"},
                   %T.Whitespace{}
-                }
+                ]
               }
             }
-          }
+          ]
         })
       end
     end

@@ -21,15 +21,15 @@ defmodule ExCss.Parser.Nodes.DeclarationListTest do
           {_, declaration_list} = Nodes.DeclarationList.parse(State.new(tokens))
 
           expect(declaration_list) |> to_eq(%Nodes.DeclarationList{
-            value: {
+            value: [
               %Nodes.Declaration{
                 important: false,
                 name: "font-weight",
-                value: {
+                value: [
                   %Tokens.Id{value: "bold"}
-                }
+                ]
               }
-            }
+            ]
           })
         end
       end
@@ -48,15 +48,15 @@ defmodule ExCss.Parser.Nodes.DeclarationListTest do
           {_, declaration_list} = Nodes.DeclarationList.parse(State.new(tokens))
 
           expect(declaration_list) |> to_eq(%Nodes.DeclarationList{
-            value: {
+            value: [
               %Nodes.Declaration{
                 important: false,
                 name: "font-weight",
-                value: {
+                value: [
                   %Tokens.Id{value: "bold"}
-                }
+                ]
               }
-            }
+            ]
           })
         end
       end
@@ -71,7 +71,7 @@ defmodule ExCss.Parser.Nodes.DeclarationListTest do
           {state, declaration_list} = Nodes.DeclarationList.parse(State.new(tokens))
 
           expect(declaration_list) |> to_eq(%Nodes.DeclarationList{
-            value: {}
+            value: []
           })
 
           expect(state.token) |> to_eq(%Tokens.EndOfFile{})
@@ -95,20 +95,20 @@ defmodule ExCss.Parser.Nodes.DeclarationListTest do
           {_, declaration_list} = Nodes.DeclarationList.parse(State.new(tokens))
 
           expect(declaration_list) |> to_eq(%Nodes.DeclarationList{
-            value: {
+            value: [
               %Nodes.AtRule{
                 name: "font-face",
-                prelude: {},
+                prelude: [],
                 block: %Nodes.SimpleBlock{
                   associated_token: %Tokens.OpenCurly{},
-                  value: {
+                  value: [
                     %Tokens.Colon{},
                     %Tokens.Whitespace{},
                     %Tokens.Id{value: "test"}
-                  }
+                  ]
                 }
               }
-            }
+            ]
           })
         end
       end
@@ -138,34 +138,34 @@ defmodule ExCss.Parser.Nodes.DeclarationListTest do
           {_, declaration_list} = Nodes.DeclarationList.parse(State.new(tokens))
 
           expect(declaration_list) |> to_eq(%Nodes.DeclarationList{
-            value: {
+            value: [
               %Nodes.Declaration{
                 important: false,
                 name: "cat",
-                value: {
+                value: [
                   %Tokens.Number{value: 4, original_value: "4"}
-                }
+                ]
               },
               %Nodes.AtRule{
                 name: "font-face",
-                prelude: {},
+                prelude: [],
                 block: %Nodes.SimpleBlock{
                   associated_token: %Tokens.OpenCurly{},
-                  value: {
+                  value: [
                     %Tokens.Colon{},
                     %Tokens.Whitespace{},
                     %Tokens.Id{value: "test"}
-                  }
+                  ]
                 }
               },
               %Nodes.Declaration{
                 important: true,
                 name: "dog",
-                value: {
+                value: [
                   %Tokens.Number{value: 5, original_value: "5"}
-                }
+                ]
               }
-            }
+            ]
           })
         end
       end
@@ -188,22 +188,22 @@ defmodule ExCss.Parser.Nodes.DeclarationListTest do
           {_, declaration_list} = Nodes.DeclarationList.parse(State.new(tokens))
 
           expect(declaration_list) |> to_eq(%Nodes.DeclarationList{
-            value: {
+            value: [
               %Nodes.Declaration{
                 important: false,
                 name: "font-weight",
-                value: {
+                value: [
                   %Tokens.Id{value: "bold"}
-                }
+                ]
               },
               %Nodes.Declaration{
                 important: false,
                 name: "font-size",
-                value: {
+                value: [
                   %Tokens.Dimension{value: 12, original_value: "12", unit: "px"}
-                }
+                ]
               }
-            }
+            ]
           })
         end
       end
@@ -225,22 +225,22 @@ defmodule ExCss.Parser.Nodes.DeclarationListTest do
           {_, declaration_list} = Nodes.DeclarationList.parse(State.new(tokens))
 
           expect(declaration_list) |> to_eq(%Nodes.DeclarationList{
-            value: {
+            value: [
               %Nodes.Declaration{
                 important: false,
                 name: "font-weight",
-                value: {
+                value: [
                   %Tokens.Id{value: "bold"}
-                }
+                ]
               },
               %Nodes.Declaration{
                 important: false,
                 name: "font-size",
-                value: {
+                value: [
                   %Tokens.Dimension{value: 12, original_value: "12", unit: "px"}
-                }
+                ]
               }
-            }
+            ]
           })
         end
       end
@@ -264,22 +264,22 @@ defmodule ExCss.Parser.Nodes.DeclarationListTest do
           {_, declaration_list} = Nodes.DeclarationList.parse(State.new(tokens))
 
           expect(declaration_list) |> to_eq(%Nodes.DeclarationList{
-            value: {
+            value: [
               %Nodes.Declaration{
                 important: false,
                 name: "font-weight",
-                value: {
+                value: [
                   %Tokens.Id{value: "bold"}
-                }
+                ]
               },
               %Nodes.Declaration{
                 important: false,
                 name: "font-size",
-                value: {
+                value: [
                   %Tokens.Dimension{value: 12, original_value: "12", unit: "px"}
-                }
+                ]
               }
-            }
+            ]
           })
         end
       end
@@ -305,24 +305,24 @@ defmodule ExCss.Parser.Nodes.DeclarationListTest do
           {_, declaration_list} = Nodes.DeclarationList.parse(State.new(tokens))
 
           expect(declaration_list) |> to_eq(%Nodes.DeclarationList{
-            value: {
+            value: [
               %Nodes.Declaration{
                 important: false,
                 name: "font-weight",
-                value: {
+                value: [
                   %Tokens.Id{value: "bold"}
-                }
+                ]
               },
               %Nodes.Declaration{
                 important: false,
                 name: "border",
-                value: {
+                value: [
                   %Tokens.Id{value: "solid"},
                   %Tokens.Dimension{value: 1, unit: "px", original_value: "1"},
                   %Tokens.Hash{value: "ff0000"}
-                }
+                ]
               }
-            }
+            ]
           })
         end
       end

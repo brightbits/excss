@@ -22,9 +22,9 @@ defmodule ExCss.Parser.Nodes.DeclarationTest do
         expect(declaration) |> to_eq(%N.Declaration{
           important: false,
           name: "font-weight",
-          value: {
+          value: [
             %T.Id{value: "bold"}
-          }
+          ]
         })
       end
     end
@@ -42,9 +42,9 @@ defmodule ExCss.Parser.Nodes.DeclarationTest do
         expect(declaration) |> to_eq(%N.Declaration{
           important: false,
           name: "font-weight",
-          value: {
+          value: [
             %T.Id{value: "bold"}
-          }
+          ]
         })
       end
     end
@@ -67,10 +67,10 @@ defmodule ExCss.Parser.Nodes.DeclarationTest do
         expect(declaration) |> to_eq(%N.Declaration{
           important: true,
           name: "font-weight",
-          value: {
+          value: [
             %T.Id{value: "bold"},
             %T.Whitespace{}
-          }
+          ]
         })
       end
     end
@@ -94,13 +94,13 @@ defmodule ExCss.Parser.Nodes.DeclarationTest do
         expect(declaration) |> to_eq(%N.Declaration{
           important: false,
           name: "border",
-          value: {
+          value: [
             %T.Id{value: "solid"},
             %T.Whitespace{},
             %T.Dimension{value: 1, unit: "px", original_value: "1"},
             %T.Whitespace{},
             %T.Hash{id: false, value: "0f0f0f"}
-          }
+          ]
         })
       end
     end
@@ -128,14 +128,14 @@ defmodule ExCss.Parser.Nodes.DeclarationTest do
         expect(declaration) |> to_eq(%N.Declaration{
           important: true,
           name: "border",
-          value: {
+          value: [
             %T.Id{value: "solid"},
             %T.Whitespace{},
             %T.Dimension{value: 1, unit: "px", original_value: "1"},
             %T.Whitespace{},
             %T.Hash{id: false, value: "0f0f0f"},
             %T.Whitespace{}
-          }
+          ]
         })
       end
     end

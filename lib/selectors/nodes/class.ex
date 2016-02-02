@@ -5,7 +5,7 @@ defmodule ExCss.Selectors.Nodes.Class do
   alias ExCss.Selectors.Nodes, as: N
   alias ExCss.Lexer.Tokens, as: T
 
-  defstruct value: nil
+  defstruct [:value]
 
   def pretty_print(class, indent) do
     PrettyPrint.pretty_out("Class: #{class.value}", indent)

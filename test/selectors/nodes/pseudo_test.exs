@@ -70,14 +70,14 @@ defmodule ExCss.Selectors.Nodes.PseudoTest do
         expect(pseudo) |> to_eq(%N.Pseudo{
           value: "test",
           type: :function,
-          function: {
+          function: [
             %T.Delim{value: "+"},
             %T.Delim{value: "-"},
             %T.Dimension{value: 123, unit: "em"},
             %T.Number{value: 123},
             %T.String{value: "Hello!"},
             %T.Id{value: "testing"}
-          }
+          ]
         })
       end
 

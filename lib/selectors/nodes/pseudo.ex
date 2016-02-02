@@ -5,7 +5,7 @@ defmodule ExCss.Selectors.Nodes.Pseudo do
   alias ExCss.Selectors.Nodes, as: N
   alias ExCss.Lexer.Tokens, as: T
 
-  defstruct value: nil, type: nil, function: nil
+  defstruct [:value, :type, :function]
 
   def pretty_print(pseudo, indent) do
     PrettyPrint.pretty_out("Pseudo:", indent)
@@ -77,10 +77,7 @@ defmodule ExCss.Selectors.Nodes.Pseudo do
     {state, components} = consume_expression(state, [])
 
     if components do
-      components =
-        components
-        |> Enum.reverse
-        |> List.to_tuple
+      components = Enum.reverse(components)
     end
 
     {state, components}

@@ -11,7 +11,7 @@ defmodule ExCss.Selectors.Nodes.SimpleSelector do
   alias ExCss.Selectors.Nodes, as: N
   alias ExCss.Lexer.Tokens, as: T
 
-  defstruct value: nil, modifiers: {}
+  defstruct value: nil, modifiers: []
 
   def pretty_print(selector, indent) do
     PrettyPrint.pretty_out("Simple Selector:", indent)
@@ -41,7 +41,7 @@ defmodule ExCss.Selectors.Nodes.SimpleSelector do
     if value do
       {state, %{selector | value: value, modifiers: modifiers}} # [ HASH | class | attrib | pseudo | negation ]*
     else
-      if tuple_size(modifiers) > 0 do # | [ HASH | class | attrib | pseudo | negation ]+
+      if length(modifiers) > 0 do # | [ HASH | class | attrib | pseudo | negation ]+
         {state, %{selector | value: %N.UniversalSelector{}, modifiers: modifiers}}
       else
         {state, nil}
@@ -55,11 +55,7 @@ defmodule ExCss.Selectors.Nodes.SimpleSelector do
     if modifier do
       consume_some_modifiers(state, [modifier] ++ modifiers)
     else
-      modifiers =
-        modifiers
-        |> Enum.reverse
-        |> List.to_tuple
-      {state, modifiers}
+      {state, Enum.reverse(modifiers)}
     end
   end
 

@@ -11,16 +11,16 @@ defmodule ParserTest do
 
       expect(result) |> to_eq(%N.Stylesheet{
         value: %N.RuleList{
-          rules: {
+          rules: [
             %N.AtRule{
-              prelude: {
+              prelude: [
                 %T.String{value: "UTF-8", wrapped_by: "\""}
-              },
+              ],
               name: "charset",
               block: nil
             },
             %N.QualifiedRule{
-              prelude: {
+              prelude: [
                 %T.Id{value: "html"},
                 %T.Whitespace{},
                 %T.Id{value: "body"},
@@ -32,10 +32,10 @@ defmodule ParserTest do
                 %T.Delim{value: "."},
                 %T.Id{value: "content"},
                 %T.Whitespace{}
-              },
+              ],
               block: %N.SimpleBlock{
                 associated_token: %T.OpenCurly{},
-                value: {
+                value: [
                   %T.Whitespace{},
                   %T.Id{value: "font-weight"},
                   %T.Colon{},
@@ -49,10 +49,10 @@ defmodule ParserTest do
                   %T.Dimension{original_value: "14", unit: "px", value: 14.0},
                   %T.Semicolon{},
                   %T.Whitespace{}
-                }
+                ]
               }
             }
-          }
+          ]
         }
       })
     end

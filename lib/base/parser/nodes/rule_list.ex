@@ -6,7 +6,7 @@ defmodule ExCss.Parser.Nodes.RuleList do
   alias ExCss.Lexer.Tokens, as: T
   alias ExCss.Lexer.Token
 
-  defstruct rules: {}
+  defstruct rules: []
 
   def pretty_print(rule_list, indent) do
     PrettyPrint.pretty_out("Rule List:", indent)
@@ -24,12 +24,7 @@ defmodule ExCss.Parser.Nodes.RuleList do
     state |> State.debug("-- CONSUMING A LIST OF RULES --")
     {state, list} = consume_a_list_of_rules(state, top_level, [])
 
-    list =
-      list
-      |> Enum.reverse
-      |> List.to_tuple
-
-    {state, list}
+    {state, Enum.reverse(list)}
   end
   defp consume_a_list_of_rules(state, top_level, rules) do
     # Create an initially empty list of rules.

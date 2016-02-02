@@ -6,7 +6,7 @@ defmodule ExCss.Parser.Nodes.DeclarationList do
   alias ExCss.Lexer.Tokens, as: T
   alias ExCss.Lexer.Token
 
-  defstruct value: {}
+  defstruct value: []
 
   def pretty_print(declaration_list, indent) do
     PrettyPrint.pretty_out("Declaration List:", indent)
@@ -23,12 +23,7 @@ defmodule ExCss.Parser.Nodes.DeclarationList do
     state |> State.debug("-- CONSUMING A LIST OF DECLARATIONS --")
     {state, list} = consume_a_list_of_declarations(state, [])
 
-    list =
-      list
-      |> Enum.reverse
-      |> List.to_tuple
-
-    {state, list}
+    {state, Enum.reverse(list)}
   end
   defp consume_a_list_of_declarations(state, declarations) do
     # Create an initially empty list of declarations.

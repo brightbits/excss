@@ -7,8 +7,8 @@ defmodule ExCss.Selectors.Nodes.Selector do
 
   alias ExCss.Parser.State
   alias ExCss.Selectors.Nodes, as: N
-  
-  defstruct value: nil
+
+  defstruct value: nil, specificity: nil
 
   def pretty_print(selector, indent) do
     PrettyPrint.pretty_out("Selector:", indent)

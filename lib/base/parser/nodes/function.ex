@@ -5,7 +5,7 @@ defmodule ExCss.Parser.Nodes.Function do
   alias ExCss.Parser.Nodes, as: N
   alias ExCss.Lexer.Tokens, as: T
 
-  defstruct name: nil, value: {}
+  defstruct name: nil, value: []
 
   def pretty_print(function, indent) do
     PrettyPrint.pretty_out("Function:", indent)
@@ -23,14 +23,9 @@ defmodule ExCss.Parser.Nodes.Function do
   end
 
   defp consume_a_function(state, name) when is_binary(name) do
-    {state, function} = consume_a_function(state, %N.Function{name: name, value: []})
+    {state, function} = consume_a_function(state, %N.Function{name: name})
 
-    value =
-      function.value
-      |> Enum.reverse
-      |> List.to_tuple
-
-    {state, %{function | value: value}}
+    {state, %{function | value: Enum.reverse(function.value)}}
   end
 
   defp consume_a_function(state, function) when is_map(function) do

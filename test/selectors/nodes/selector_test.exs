@@ -24,7 +24,7 @@ defmodule ExCss.Selectors.Nodes.SelectorTest do
               value: %N.TypeSelector{
                 value: "h1"
               },
-              modifiers: {}
+              modifiers: []
             }
           })
         end
@@ -44,7 +44,7 @@ defmodule ExCss.Selectors.Nodes.SelectorTest do
               value: %N.TypeSelector{
                 value: "h1"
               },
-              modifiers: {}
+              modifiers: []
             }
           })
         end
@@ -66,13 +66,13 @@ defmodule ExCss.Selectors.Nodes.SelectorTest do
               type: :descendant,
               left: %N.SimpleSelector{
                 value: %N.TypeSelector{value: "h1"},
-                modifiers: {}
+                modifiers: []
               },
               right: %N.SimpleSelector{
                 value: %N.UniversalSelector{},
-                modifiers: {
+                modifiers: [
                   %N.Class{value: "title"}
-                }
+                ]
               }
             }
           })
@@ -97,13 +97,13 @@ defmodule ExCss.Selectors.Nodes.SelectorTest do
               type: :child,
               left: %N.SimpleSelector{
                 value: %N.TypeSelector{value: "h1"},
-                modifiers: {}
+                modifiers: []
               },
               right: %N.SimpleSelector{
                 value: %N.UniversalSelector{},
-                modifiers: {
+                modifiers: [
                   %N.Class{value: "title"}
-                }
+                ]
               }
             }
           })
@@ -142,31 +142,31 @@ defmodule ExCss.Selectors.Nodes.SelectorTest do
               type: :descendant,
               left: %N.SimpleSelector{
                 value: %N.UniversalSelector{},
-                modifiers: {
+                modifiers: [
                   %N.Pseudo{
                     type: :function,
                     value: "nth-child",
-                    function: {
+                    function: [
                       %T.Number{value: 3}
-                    }
+                    ]
                   }
-                }
+                ]
               },
               right: %N.Combinator{
                 type: :child,
                 left: %N.SimpleSelector{
                   value: %N.UniversalSelector{},
-                  modifiers: {
+                  modifiers: [
                     %N.Class{value: "title"},
                     %N.Class{value: "potato"},
                     %N.Hash{value: "my_id"}
-                  }
+                  ]
                 },
                 right: %N.SimpleSelector{
                   value: %N.UniversalSelector{},
-                  modifiers: {
+                  modifiers: [
                     %N.Class{value: "cat"}
-                  }
+                  ]
                 }
               }
             }

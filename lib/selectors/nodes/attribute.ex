@@ -5,7 +5,7 @@ defmodule ExCss.Selectors.Nodes.Attribute do
   alias ExCss.Selectors.Nodes, as: N
   alias ExCss.Lexer.Tokens, as: T
 
-  defstruct value: nil, match_token: nil, match_value: nil
+  defstruct [:value, :match_token, :match_value]
 
   def pretty_print(attribute, indent) do
     PrettyPrint.pretty_out("Attribute:", indent)

@@ -5,7 +5,7 @@ defmodule ExCss.Parser.Nodes.QualifiedRule do
   alias ExCss.Parser.Nodes, as: N
   alias ExCss.Lexer.Tokens, as: T
 
-  defstruct prelude: {}, block: nil
+  defstruct prelude: [], block: nil
 
   def pretty_print(qualified_rule, indent) do
     PrettyPrint.pretty_out("Qualified Rule:", indent)
@@ -28,15 +28,10 @@ defmodule ExCss.Parser.Nodes.QualifiedRule do
     state |> State.debug("-- CONSUMING A QUALIFIED RULE --")
     state = State.consume_whitespace(state)
 
-    {state, rule} = consume_a_qualified_rule(state, %N.QualifiedRule{prelude: []})
+    {state, rule} = consume_a_qualified_rule(state, %N.QualifiedRule{})
 
     if rule do
-      prelude =
-        rule.prelude
-        |> Enum.reverse
-        |> List.to_tuple
-
-      {state, %{rule | prelude: prelude}}
+      {state, %{rule | prelude: Enum.reverse(rule.prelude)}}
     else
       {state, rule}
     end

@@ -5,7 +5,7 @@ defmodule ExCss.Selectors.Nodes.Negation do
   alias ExCss.Selectors.Nodes, as: N
   alias ExCss.Lexer.Tokens, as: T
 
-  defstruct value: nil
+  defstruct [:value]
 
   def pretty_print(hash, indent) do
     PrettyPrint.pretty_out("Negation:", indent)
