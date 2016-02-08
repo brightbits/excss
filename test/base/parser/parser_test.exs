@@ -7,7 +7,7 @@ defmodule ParserTest do
 
   describe ".parse" do
     it "parses simple?" do
-      result = ExCss.Parser.parse(TestHelper.fixture("simple1.css"))
+      result = ExCss.Parser.parse(TestHelper.fixture("simple1.css"), specifications: [])
 
       expect(result) |> to_eq(%N.Stylesheet{
         value: %N.RuleList{

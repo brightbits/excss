@@ -5,8 +5,14 @@ defmodule ExCss.Parser do
 
   def parse(str, opts \\ [specifications: [ExCss.Selectors]]) do
     {_, stylesheet} = Nodes.Stylesheet.parse(State.new(str, opts))
-    stylesheet
+
+    apply_specifications(stylesheet, opts[:specifications])
   end
+
+  defp apply_specifications(stylesheet, [specification | other_specifications]) do
+    apply_specifications(specification.visit(stylesheet), other_specifications)
+  end
+  defp apply_specifications(stylesheet, []), do: stylesheet
 
   defp parse_a_list_of_rules(state) do
     # Consume a list of rules from the stream of tokens, with the top-level flag unset.

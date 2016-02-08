@@ -1,6 +1,9 @@
-%{"bunt": {:hex, :bunt, "0.1.4"},
+%{"apex": {:hex, :apex, "0.3.6"},
+  "bunt": {:hex, :bunt, "0.1.4"},
   "credo": {:hex, :credo, "0.3.0-dev2"},
+  "floki": {:hex, :floki, "0.7.1"},
   "fs": {:hex, :fs, "0.9.2"},
   "meck": {:hex, :meck, "0.8.4"},
   "mix_test_watch": {:hex, :mix_test_watch, "0.2.5"},
+  "mochiweb": {:hex, :mochiweb, "2.12.2"},
   "pavlov": {:git, "https://github.com/mgwidmann/pavlov.git", "67f352b1a3e4a5e90ae682831f97a8f5081ca9c2", [branch: "elixir_1.2_support"]}}
