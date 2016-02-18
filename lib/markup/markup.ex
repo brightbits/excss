@@ -2,28 +2,108 @@ defmodule ExCss.Markup do
   alias ExCss.Markup.Node, as: MN
 
   def new(html) do
-    root_node = Floki.parse(html)
-    {root_node, _} = apply_id_to_node(root_node, 0)
-    root_node
+    Floki.parse(html)
+    |> MN.new
+    |> apply_id_to_node
+    |> apply_parent_id_to_node
+    |> apply_descendant_ids_to_node
+    |> apply_child_ids_to_node
+    |> apply_sibling_ids_to_node
   end
 
   def find_nodes(markup, tag_name) do
     Floki.find(markup, tag_name)
   end
 
-  defp apply_id_to_node({_, _, children} = node, next_id) when is_tuple(node) do
-    {new_children, new_next_id} = apply_ids_to_nodes(children, next_id + 1)
+  defp apply_sibling_ids_to_node(node), do: apply_sibling_ids_to_node(node, nil)
+  defp apply_sibling_ids_to_node(%MN{} = node, parent_node) do
+    children = Enum.map(node.children, fn (child) ->
+      apply_sibling_ids_to_node(child, node)
+    end)
 
-    node =
+    node = if parent_node do
+      sibling_ids =
+        parent_node.children
+        |> Enum.map(fn
+          (%MN{id: id}) -> id
+          (_) -> nil
+        end)
+        |> Enum.reject(fn (id) -> id == nil || id == node.id end)
+
+      adjacent_sibling_ids =
+        sibling_ids
+        |> Enum.filter(fn (id) -> id > node.id end)
+
+      adjacent_sibling_id = if length(adjacent_sibling_ids) > 0 do
+        hd(adjacent_sibling_ids)
+      else
+        nil
+      end
+
+      %{node | general_sibling_ids: sibling_ids, adjacent_sibling_id: adjacent_sibling_id}
+    else
       node
-      |> MN.set_id(next_id)
-      |> MN.set_children(new_children)
+    end
+
+    %{node | children: children}
+  end
+  defp apply_sibling_ids_to_node(node, _) when is_binary(node), do: node
+
+  defp apply_child_ids_to_node(%MN{} = node) do
+    children = Enum.map(node.children, fn (child) ->
+      apply_child_ids_to_node(child)
+    end)
+
+    child_ids =
+      children
+      |> Enum.map(fn
+        (%MN{id: id}) -> id
+        (_) -> nil
+      end)
+      |> Enum.reject(fn (id) -> id == nil end)
+
+    %{node | child_ids: child_ids, children: children}
+  end
+  defp apply_child_ids_to_node(node) when is_binary(node), do: node
+
+  defp apply_descendant_ids_to_node(%MN{} = node) do
+    children = Enum.map(node.children, fn (child) ->
+      apply_descendant_ids_to_node(child)
+    end)
+
+    descendant_ids =
+      children
+      |> Enum.flat_map(fn
+        (%MN{id: id, descendant_ids: descendant_ids}) -> [id] ++ descendant_ids
+        (_) -> []
+      end)
+      |> Enum.reject(fn (id) -> id == nil end)
+
+    %{node | descendant_ids: descendant_ids, children: children}
+  end
+  defp apply_descendant_ids_to_node(node) when is_binary(node), do: node
+
+  defp apply_parent_id_to_node(node), do: apply_parent_id_to_node(node, nil)
+  defp apply_parent_id_to_node(%MN{} = node, parent_id) do
+    %{node | parent_id: parent_id, children: Enum.map(node.children, fn (child) ->
+      apply_parent_id_to_node(child, node.id)
+    end)}
+  end
+  defp apply_parent_id_to_node(node, _) when is_binary(node), do: node
+
+  defp apply_id_to_node(node) do
+    {node, _} = apply_id_to_node(node, 0)
+    node
+  end
+  defp apply_id_to_node(%MN{} = node, next_id) do
+    {new_children, new_next_id} = apply_ids_to_nodes(node.children, next_id + 1, [])
+
+    node = %{node | id: next_id, children: new_children}
 
     {node, new_next_id}
   end
   defp apply_id_to_node(node, next_id) when is_binary(node), do: {node, next_id}
 
-  defp apply_ids_to_nodes(nodes, next_id), do: apply_ids_to_nodes(nodes, next_id, [])
   defp apply_ids_to_nodes([node | other_nodes], next_id, results) do
     {node, new_next_id} = apply_id_to_node(node, next_id)
 

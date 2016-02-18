@@ -26,4 +26,10 @@ defmodule TestHelper do
   defp is_eq(expectation, value) do
     expectation |> to_eq(value)
   end
+
+  def parse_selector(selector) do
+    tokens = ExCss.Lexer.lex(selector)
+    {_, selector} = ExCss.Selectors.Nodes.Selector.parse(ExCss.Parser.State.new(tokens))
+    selector
+  end
 end

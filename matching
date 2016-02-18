@@ -1,0 +1,49 @@
+<html id=0>
+  <body id=1>
+    <section id=2>
+      <div id=3 class="container">
+        <p id=4>Hello</p>
+      </div>
+
+      <div id=5 class="container">
+        <p id=6 class="para">Hello 1</p>
+      </div>
+
+      <div id=7 class="splat">
+        <p id=8 class="para">Hello 2</p>
+      </div>
+    </section>
+  </body>
+</html>
+
+body#page_testicles div.container > p.para
+
+filter: DescendantCombinator(ids, left, right)
+  filtered_ids = filter(ids, right)
+
+filter: ChildCombinator(ids, left, right)
+  filtered_ids = filter(ids, right)
+
+filter: TypeSelector(ids, required_tag_name, modifiers)
+  # find all nodes with an id in ids
+  # where the tag_name is required_tag_name
+  # and those match all the modifiers
+
+ids = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+selector = DescendantCombinator(body#page_testicles, ChildCombinator(div.container, p.para))
+filter(ids, selector)
+  filter:DescendantCombinator(ids, left, right)
+    left = body#page_testicles
+    right = ChildCombinator(div.container, p:first-child)
+
+    matching_right_ids = filter:ChildCombinator(ids, left, right)
+      left = div.container # 5
+      right = p.para
+
+      # any node in ids that mches p.para
+      matching_right_ids = [6, 8]
+
+      # any node in matching_right_ids whos parent matches left
+      [5] # return the matching left id
+
+    # any node in matching_right_ids who has an ancestor who matches left

@@ -2,45 +2,127 @@ defmodule ExCss.MarkupTest do
   use Pavlov.Case, async: true
   import Pavlov.Syntax.Expect
 
+  alias ExCss.Markup.Node, as: MN
+
+  let :html, do: TestHelper.fixture("simple.html")
+
   describe ".new" do
-    let(:html) do
-      """
-        <html>
-          <head>
-            <title>This is a title</title>
-          </head>
-          <body>
-            <h1>This is an article</h1>
-            <p>This is some content, with <strong>bold things</strong> and <span style="color: red;">red things</span>.</p>
+    it "returns the processed nodes with the correct data attached" do
+      expected = %MN{
+        id: 0,
+        parent_id: nil,
+        child_ids: [1, 3],
+        descendant_ids: [1, 2, 3, 4, 5, 6, 7, 8],
+        adjacent_sibling_id: nil,
+        general_sibling_ids: [],
 
-            <footer>Copyright 1942</footer>
-          </body>
-        </html>
-      """
-    end
+        tag_name: "html",
+        attributes: [],
+        children: [
+          %MN{
+            id: 1,
+            parent_id: 0,
+            child_ids: [2],
+            descendant_ids: [2],
+            adjacent_sibling_id: 3,
+            general_sibling_ids: [3],
 
-    it "returns the nodes of the html with excss ids correctly" do
-      expected = {"html", [{:excss_id, 0}],
-        [
-          {"head", [{:excss_id, 1}],
-            [
-              {"title", [{:excss_id, 2}], ["This is a title"]}
+            tag_name: "head",
+            attributes: [],
+            children: [
+              %MN{
+                id: 2,
+                parent_id: 1,
+                child_ids: [],
+                descendant_ids: [],
+                adjacent_sibling_id: nil,
+                general_sibling_ids: [],
+
+                tag_name: "title",
+                attributes: [],
+                children: ["This is a title"]
+              }
             ]
           },
-          {"body", [{:excss_id, 3}],
-            [
-              {"h1", [{:excss_id, 4}], ["This is an article"]},
-              {"p", [{:excss_id, 5}],
-                [
+          %MN{
+            id: 3,
+            parent_id: 0,
+            child_ids: [4, 5, 8],
+            descendant_ids: [4, 5, 6, 7, 8],
+            adjacent_sibling_id: nil,
+            general_sibling_ids: [1],
+
+            tag_name: "body",
+            attributes: [],
+            children: [
+              %MN{
+                id: 4,
+                parent_id: 3,
+                child_ids: [],
+                descendant_ids: [],
+                adjacent_sibling_id: 5,
+                general_sibling_ids: [5, 8],
+
+                tag_name: "h1",
+                attributes: [],
+                children: ["This is an article"]
+              },
+              %MN{
+                id: 5,
+                parent_id: 3,
+                child_ids: [6, 7],
+                descendant_ids: [6, 7],
+                adjacent_sibling_id: 8,
+                general_sibling_ids: [4, 8],
+
+                tag_name: "p",
+                attributes: [],
+                children: [
                   "This is some content, with ",
-                  {"strong", [{:excss_id, 6}], ["bold things"]},
+                  %MN{
+                    id: 6,
+                    parent_id: 5,
+                    child_ids: [],
+                    descendant_ids: [],
+                    adjacent_sibling_id: 7,
+                    general_sibling_ids: [7],
+
+                    tag_name: "strong",
+                    attributes: [],
+                    children: ["bold things"]
+                  },
                   " and ",
-                  {"span", [{:excss_id, 7}, {"style", "color: red;"}], ["red things"]},
+                  %MN{
+                    id: 7,
+                    parent_id: 5,
+                    child_ids: [],
+                    descendant_ids: [],
+                    adjacent_sibling_id: nil,
+                    general_sibling_ids: [6],
+
+                    tag_name: "span",
+                    attributes: [
+                      {"style", "color: red;"}
+                    ],
+                    children: ["red things"]
+                  },
                   "."
                 ]
               },
-              {"footer", [{:excss_id, 8}], ["Copyright 1942"]}
-            ]}
+              %MN{
+                id: 8,
+                parent_id: 3,
+                child_ids: [],
+                descendant_ids: [],
+                adjacent_sibling_id: nil,
+                general_sibling_ids: [4, 5],
+
+                tag_name: "footer",
+                attributes: [],
+                children: ["Copyright 1942"]
+              }
+            ]
+          }
         ]
       }
 

@@ -15,4 +15,8 @@ defmodule ExCss.Context do
 
     %@t{markup: markup, stylesheets: stylesheets}
   end
+
+  defp calculate_styles do
+
+  end
 end

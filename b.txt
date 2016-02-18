@@ -1,0 +1,60 @@
+%Elixir.ExCss.Markup.Node{
+  adjacent_sibling_id: nil
+  attributes: [
+    {
+      "potato"
+      "42"
+    }
+  ]
+  child_ids: [
+  ]
+  children: [
+    "This is a test "
+    %Elixir.ExCss.Markup.Node{
+      adjacent_sibling_id: nil
+      attributes: [
+      ]
+      child_ids: [
+      ]
+      children: [
+        "to see"
+      ]
+      descendant_ids: [
+      ]
+      general_sibling_ids: [
+      ]
+      id: nil
+      parent_id: nil
+      tag_name: "strong"
+    }
+    ", if the test "
+    %Elixir.ExCss.Markup.Node{
+      adjacent_sibling_id: nil
+      attributes: [
+        {
+          "style"
+          "color: #0f0"
+        }
+      ]
+      child_ids: [
+      ]
+      children: [
+        "passes!"
+      ]
+      descendant_ids: [
+      ]
+      general_sibling_ids: [
+      ]
+      id: nil
+      parent_id: nil
+      tag_name: "span"
+    }
+  ]
+  descendant_ids: [
+  ]
+  general_sibling_ids: [
+  ]
+  id: nil
+  parent_id: nil
+  tag_name: "p"
+}
