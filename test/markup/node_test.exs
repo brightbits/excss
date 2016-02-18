@@ -41,8 +41,14 @@ defmodule ExCss.Markup.NodeTest do
   end
 
   describe ".text" do
-    it "returns all the text nodes joined together, from all the way down" do
-      expect(MN.text(subject_node)) |> to_eq("This is a test to see, if the test passes!")
+    context "with a proper node" do
+      it "returns all the text nodes joined together, from all the way down" do
+        expect(MN.text(subject_node)) |> to_eq("This is a test to see, if the test passes!")
+      end
+    end
+
+    context "with a text node" do
+      expect(MN.text("hello")) |> to_eq("hello")
     end
   end
 
