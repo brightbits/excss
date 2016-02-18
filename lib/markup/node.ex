@@ -20,6 +20,16 @@ defmodule ExCss.Markup.Node do
     }
   end
 
+  def text(node) when is_binary(node), do: node
+  def text(node, :inner) when is_binary(node), do: [node]
+  def text(%@t{} = node), do: Enum.join(text(node, :inner))
+  def text(%@t{} = node, :inner) do
+    node.children
+    |> Enum.flat_map(fn (child) ->
+      text(child, :inner)
+    end)
+  end
+
   def tag_name?(%@t{tag_name: tag_name}, required_tag_name) do
     String.downcase(tag_name) == String.downcase(required_tag_name)
   end

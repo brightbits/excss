@@ -6,12 +6,11 @@ defmodule ExCss.Selectors.FinderTest do
 
   describe ".find" do
     let :markup, do: ExCss.Markup.new(TestHelper.fixture("finding.html"))
-    let :ids, do: ExCss.Markup.Node.ids(markup)
+    let :ids, do: [markup.id] ++ markup.descendant_ids
 
     describe "universal selector" do
       context "on its own" do
         it "returns all the node ids" do
-          IO.puts Floki.raw_html(markup)
           selector = TestHelper.parse_selector("*")
 
           resulting_ids = ExCss.Selectors.Finder.find(markup, selector)

@@ -10,6 +10,9 @@ defmodule ExCss.Context do
       |> ExCss.Markup.find_nodes("style")
       |> Enum.map(fn (style_node) ->
         text = ExCss.Markup.Node.text(style_node)
+
+        IO.inspect(text)
+
         ExCss.Parser.parse(text)
       end)
 

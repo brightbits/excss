@@ -38,7 +38,12 @@ defmodule ExCss.ContextTest do
     it "returns a context with the parsed markup and empty stylesheets" do
       expect(ExCss.Context.new("<html></html>")) |> to_eq(
         %ExCss.Context{
-          markup: {"html", [excss_id: 0], []},
+          markup: %ExCss.Markup.Node{
+            id: 0,
+            tag_name: "html",
+            attributes: [],
+            children: []
+          },
           stylesheets: []
         }
       )

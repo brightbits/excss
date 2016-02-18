@@ -12,7 +12,17 @@ defmodule ExCss.Markup do
   end
 
   def find_nodes(markup, tag_name) do
-    Floki.find(markup, tag_name)
+    nodes = MN.visit(markup, [],
+      fn (node, acc) ->
+        if MN.tag_name?(node, tag_name) do
+          [node] ++ acc
+        else
+          acc
+        end
+      end
+    )
+
+    Enum.reverse(nodes)
   end
 
   defp apply_sibling_ids_to_node(node), do: apply_sibling_ids_to_node(node, nil)

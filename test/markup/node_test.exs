@@ -4,15 +4,19 @@ defmodule ExCss.Markup.NodeTest do
 
   alias ExCss.Markup.Node, as: MN
 
+  let :floki_node do
+    {"p", [{"potato", "42"}], [
+      "This is a test ",
+      {"strong", [], ["to see"]},
+      ", if the test ",
+      {"span", [{"style", "color: #0f0;"}], ["passes!"]}
+    ]}
+  end
+
+  let :subject_node, do: ExCss.Markup.Node.new(floki_node)
+
   describe ".new" do
     it "takes a floki node and recursively converts it to a excss node" do
-      floki_node = {"p", [{"potato", "42"}], [
-        "This is a test ",
-        {"strong", [], ["to see"]},
-        ", if the test ",
-        {"span", [{"style", "color: #0f0;"}], ["passes!"]}
-      ]}
-
       expected = %MN{
         tag_name: "p",
         attributes: [{"potato", "42"}],
@@ -32,7 +36,13 @@ defmodule ExCss.Markup.NodeTest do
         ]
       }
 
-      expect(MN.new(floki_node)) |> to_eq(expected)
+      expect(subject_node) |> to_eq(expected)
+    end
+  end
+
+  describe ".text" do
+    it "returns all the text nodes joined together, from all the way down" do
+      expect(MN.text(subject_node)) |> to_eq("This is a test to see, if the test passes!")
     end
   end
 
