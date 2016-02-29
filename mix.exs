@@ -31,7 +31,7 @@ defmodule ExCss.Mixfile do
       {:pavlov, ">= 0.1.0", only: :test, github: "mgwidmann/pavlov", branch: "elixir_1.2_support"},
       {:credo, "~> 0.2", only: [:dev, :test]},
       {:floki, "~> 0.7"},
-      {:apex, "~> 0.3.7", only: [:dev, :test]},
+      {:apex, "~> 0.4.0", only: [:dev, :test]},
       {:mix_test_watch, "~> 0.2", only: :dev}
     ]
   end

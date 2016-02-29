@@ -54,30 +54,34 @@ defmodule ExCss.SelectorsTest do
               block: nil
             },
             %SN.StyleRule{
-              selector: %SN.Selector{
-                specificity: 112,
-                value: %SN.Combinator{
-                  type: :descendant,
-                  left: %SN.SimpleSelector{
-                    value: %SN.TypeSelector{value: "h1"},
-                    modifiers: []
-                  },
-                  right: %SN.Combinator{
-                    type: :descendant,
-                    left: %SN.SimpleSelector{
-                      value: %SN.TypeSelector{value: "span"},
-                      modifiers: [
-                        %SN.Hash{value: "title"}
-                      ]
-                    },
-                    right: %SN.SimpleSelector{
-                      value: %SN.UniversalSelector{},
-                      modifiers: [
-                        %SN.Class{value: "big"}
-                      ]
+              selector_list: %SN.SelectorList{
+                value: [
+                  %SN.Selector{
+                    specificity: 112,
+                    value: %SN.Combinator{
+                      type: :descendant,
+                      left: %SN.SimpleSelector{
+                        value: %SN.TypeSelector{value: "h1"},
+                        modifiers: []
+                      },
+                      right: %SN.Combinator{
+                        type: :descendant,
+                        left: %SN.SimpleSelector{
+                          value: %SN.TypeSelector{value: "span"},
+                          modifiers: [
+                            %SN.Hash{value: "title"}
+                          ]
+                        },
+                        right: %SN.SimpleSelector{
+                          value: %SN.UniversalSelector{},
+                          modifiers: [
+                            %SN.Class{value: "big"}
+                          ]
+                        }
+                      }
                     }
                   }
-                }
+                ]
               },
               declarations: %N.DeclarationList{
                 value: [

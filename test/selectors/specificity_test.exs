@@ -7,7 +7,7 @@ defmodule ExCss.Selectors.SpecificityTest do
   alias ExCss.Lexer.Tokens, as: T
 
   describe ".visit" do
-    it "transforms qualified rules in to style rules with selectors and declaration lists" do
+    it "applys specificity to the stylesheet" do
       stylesheet = ExCss.Parser.parse("""
       @charset "utf-8";
       h1 span#title .big {
@@ -26,30 +26,34 @@ defmodule ExCss.Selectors.SpecificityTest do
               block: nil
             },
             %SN.StyleRule{
-              selector: %SN.Selector{
-                specificity: 112,
-                value: %SN.Combinator{
-                  type: :descendant,
-                  left: %SN.SimpleSelector{
-                    value: %SN.TypeSelector{value: "h1"},
-                    modifiers: []
-                  },
-                  right: %SN.Combinator{
-                    type: :descendant,
-                    left: %SN.SimpleSelector{
-                      value: %SN.TypeSelector{value: "span"},
-                      modifiers: [
-                        %SN.Hash{value: "title"}
-                      ]
-                    },
-                    right: %SN.SimpleSelector{
-                      value: %SN.UniversalSelector{},
-                      modifiers: [
-                        %SN.Class{value: "big"}
-                      ]
+              selector_list: %SN.SelectorList{
+                value: [
+                  %SN.Selector{
+                    specificity: 112,
+                    value: %SN.Combinator{
+                      type: :descendant,
+                      left: %SN.SimpleSelector{
+                        value: %SN.TypeSelector{value: "h1"},
+                        modifiers: []
+                      },
+                      right: %SN.Combinator{
+                        type: :descendant,
+                        left: %SN.SimpleSelector{
+                          value: %SN.TypeSelector{value: "span"},
+                          modifiers: [
+                            %SN.Hash{value: "title"}
+                          ]
+                        },
+                        right: %SN.SimpleSelector{
+                          value: %SN.UniversalSelector{},
+                          modifiers: [
+                            %SN.Class{value: "big"}
+                          ]
+                        }
+                      }
                     }
                   }
-                }
+                ]
               },
               declarations: %N.DeclarationList{
                 value: [

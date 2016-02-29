@@ -11,10 +11,10 @@ defmodule ExCss.MarkupTest do
       expected = %MN{
         id: 0,
         parent_id: nil,
-        child_ids: [1, 3],
-        descendant_ids: [1, 2, 3, 4, 5, 6, 7, 8],
+        child_ids: MapSet.new([1, 3]),
+        descendant_ids: MapSet.new([1, 2, 3, 4, 5, 6, 7, 8]),
         adjacent_sibling_id: nil,
-        general_sibling_ids: [],
+        general_sibling_ids: MapSet.new([]),
 
         tag_name: "html",
         attributes: [],
@@ -22,10 +22,10 @@ defmodule ExCss.MarkupTest do
           %MN{
             id: 1,
             parent_id: 0,
-            child_ids: [2],
-            descendant_ids: [2],
+            child_ids: MapSet.new([2]),
+            descendant_ids: MapSet.new([2]),
             adjacent_sibling_id: 3,
-            general_sibling_ids: [3],
+            general_sibling_ids: MapSet.new([3]),
 
             tag_name: "head",
             attributes: [],
@@ -33,10 +33,10 @@ defmodule ExCss.MarkupTest do
               %MN{
                 id: 2,
                 parent_id: 1,
-                child_ids: [],
-                descendant_ids: [],
+                child_ids: MapSet.new([]),
+                descendant_ids: MapSet.new([]),
                 adjacent_sibling_id: nil,
-                general_sibling_ids: [],
+                general_sibling_ids: MapSet.new([]),
 
                 tag_name: "title",
                 attributes: [],
@@ -47,10 +47,10 @@ defmodule ExCss.MarkupTest do
           %MN{
             id: 3,
             parent_id: 0,
-            child_ids: [4, 5, 8],
-            descendant_ids: [4, 5, 6, 7, 8],
+            child_ids: MapSet.new([4, 5, 8]),
+            descendant_ids: MapSet.new([4, 5, 6, 7, 8]),
             adjacent_sibling_id: nil,
-            general_sibling_ids: [1],
+            general_sibling_ids: MapSet.new([1]),
 
             tag_name: "body",
             attributes: [],
@@ -58,10 +58,10 @@ defmodule ExCss.MarkupTest do
               %MN{
                 id: 4,
                 parent_id: 3,
-                child_ids: [],
-                descendant_ids: [],
+                child_ids: MapSet.new([]),
+                descendant_ids: MapSet.new([]),
                 adjacent_sibling_id: 5,
-                general_sibling_ids: [5, 8],
+                general_sibling_ids: MapSet.new([5, 8]),
 
                 tag_name: "h1",
                 attributes: [],
@@ -70,10 +70,10 @@ defmodule ExCss.MarkupTest do
               %MN{
                 id: 5,
                 parent_id: 3,
-                child_ids: [6, 7],
-                descendant_ids: [6, 7],
+                child_ids: MapSet.new([6, 7]),
+                descendant_ids: MapSet.new([6, 7]),
                 adjacent_sibling_id: 8,
-                general_sibling_ids: [4, 8],
+                general_sibling_ids: MapSet.new([4, 8]),
 
                 tag_name: "p",
                 attributes: [],
@@ -82,10 +82,10 @@ defmodule ExCss.MarkupTest do
                   %MN{
                     id: 6,
                     parent_id: 5,
-                    child_ids: [],
-                    descendant_ids: [],
+                    child_ids: MapSet.new([]),
+                    descendant_ids: MapSet.new([]),
                     adjacent_sibling_id: 7,
-                    general_sibling_ids: [7],
+                    general_sibling_ids: MapSet.new([7]),
 
                     tag_name: "strong",
                     attributes: [],
@@ -95,10 +95,10 @@ defmodule ExCss.MarkupTest do
                   %MN{
                     id: 7,
                     parent_id: 5,
-                    child_ids: [],
-                    descendant_ids: [],
+                    child_ids: MapSet.new([]),
+                    descendant_ids: MapSet.new([]),
                     adjacent_sibling_id: nil,
-                    general_sibling_ids: [6],
+                    general_sibling_ids: MapSet.new([6]),
 
                     tag_name: "span",
                     attributes: [
@@ -112,10 +112,10 @@ defmodule ExCss.MarkupTest do
               %MN{
                 id: 8,
                 parent_id: 3,
-                child_ids: [],
-                descendant_ids: [],
+                child_ids: MapSet.new([]),
+                descendant_ids: MapSet.new([]),
                 adjacent_sibling_id: nil,
-                general_sibling_ids: [4, 5],
+                general_sibling_ids: MapSet.new([4, 5]),
 
                 tag_name: "footer",
                 attributes: [],

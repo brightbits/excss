@@ -3,7 +3,7 @@ defmodule ExCss.ContextTest do
   import Pavlov.Syntax.Expect
 
   alias ExCss.Parser.Nodes, as: N
-  alias ExCss.Selector.Nodes, as: SN
+  alias ExCss.Selectors.Nodes, as: SN
 
   let(:html) do
     """
@@ -55,13 +55,13 @@ defmodule ExCss.ContextTest do
 
         expect(context.stylesheets) |> to_eq(
           [
-            %ExCss.Parser.Nodes.Stylesheet{
-              value: %ExCss.Parser.Nodes.RuleList{
+            %N.Stylesheet{
+              value: %N.RuleList{
                 rules: [
-                  %ExCss.Selectors.Nodes.StyleRule{
-                    declarations: %ExCss.Parser.Nodes.DeclarationList{
+                  %SN.StyleRule{
+                    declarations: %N.DeclarationList{
                       value: [
-                        %ExCss.Parser.Nodes.Declaration{
+                        %N.Declaration{
                           important: false,
                           name: "font-weight",
                           value: [
@@ -70,27 +70,31 @@ defmodule ExCss.ContextTest do
                         }
                       ]
                     },
-                    selector: %ExCss.Selectors.Nodes.Selector{
-                      specificity: 10,
-                      value: %ExCss.Selectors.Nodes.SimpleSelector{
-                        modifiers: [
-                          %ExCss.Selectors.Nodes.Class{value: "something"}
-                        ],
-                        value: %ExCss.Selectors.Nodes.UniversalSelector{}
-                      }
+                    selector_list: %SN.SelectorList{
+                      value: [
+                        %SN.Selector{
+                          specificity: 10,
+                          value: %SN.SimpleSelector{
+                            modifiers: [
+                              %SN.Class{value: "something"}
+                            ],
+                            value: %SN.UniversalSelector{}
+                          }
+                        }
+                      ]
                     }
                   },
-                  %ExCss.Selectors.Nodes.StyleRule{
-                    declarations: %ExCss.Parser.Nodes.DeclarationList{
+                  %SN.StyleRule{
+                    declarations: %N.DeclarationList{
                       value: [
-                        %ExCss.Parser.Nodes.Declaration{
+                        %N.Declaration{
                           important: false,
                           name: "color",
                           value: [
                             %ExCss.Lexer.Tokens.Hash{id: true, value: "fff"}
                           ]
                         },
-                        %ExCss.Parser.Nodes.Declaration{
+                        %N.Declaration{
                           important: false,
                           name: "font-size",
                           value: [
@@ -103,24 +107,28 @@ defmodule ExCss.ContextTest do
                         }
                       ]
                     },
-                    selector: %ExCss.Selectors.Nodes.Selector{
-                      specificity: 1,
-                      value: %ExCss.Selectors.Nodes.SimpleSelector{
-                        modifiers: [],
-                        value: %ExCss.Selectors.Nodes.TypeSelector{value: "h2"}
-                      }
+                    selector_list: %SN.SelectorList{
+                      value: [
+                        %SN.Selector{
+                          specificity: 1,
+                          value: %SN.SimpleSelector{
+                            modifiers: [],
+                            value: %SN.TypeSelector{value: "h2"}
+                          }
+                        }
+                      ]
                     }
                   }
                 ]
               }
             },
-            %ExCss.Parser.Nodes.Stylesheet{
-              value: %ExCss.Parser.Nodes.RuleList{
+            %N.Stylesheet{
+              value: %N.RuleList{
                 rules: [
-                  %ExCss.Selectors.Nodes.StyleRule{
-                    declarations: %ExCss.Parser.Nodes.DeclarationList{
+                  %SN.StyleRule{
+                    declarations: %N.DeclarationList{
                       value: [
-                        %ExCss.Parser.Nodes.Declaration{
+                        %N.Declaration{
                           important: false,
                           name: "text-decoration",
                           value: [
@@ -129,12 +137,16 @@ defmodule ExCss.ContextTest do
                         }
                       ]
                     },
-                    selector: %ExCss.Selectors.Nodes.Selector{
-                      specificity: 1,
-                      value: %ExCss.Selectors.Nodes.SimpleSelector{
-                        modifiers: [],
-                        value: %ExCss.Selectors.Nodes.TypeSelector{value: "p"}
-                      }
+                    selector_list: %SN.SelectorList{
+                      value: [
+                        %SN.Selector{
+                          specificity: 1,
+                          value: %SN.SimpleSelector{
+                            modifiers: [],
+                            value: %SN.TypeSelector{value: "p"}
+                          }
+                        }
+                      ]
                     }
                   }
                 ]

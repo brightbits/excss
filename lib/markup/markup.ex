@@ -11,6 +11,20 @@ defmodule ExCss.Markup do
     |> apply_sibling_ids_to_node
   end
 
+  def find_id(markup, id) do
+    nodes = MN.visit(markup, [],
+      fn (node, acc) ->
+        if node.id == id do
+          [node]
+        else
+          acc
+        end
+      end
+    )
+
+    List.first(nodes)
+  end
+
   def find_nodes(markup, tag_name) do
     nodes = MN.visit(markup, [],
       fn (node, acc) ->
@@ -44,13 +58,11 @@ defmodule ExCss.Markup do
         sibling_ids
         |> Enum.filter(fn (id) -> id > node.id end)
 
-      adjacent_sibling_id = if length(adjacent_sibling_ids) > 0 do
-        hd(adjacent_sibling_ids)
-      else
-        nil
-      end
-
-      %{node | general_sibling_ids: sibling_ids, adjacent_sibling_id: adjacent_sibling_id}
+      %{
+        node |
+        general_sibling_ids: MapSet.new(sibling_ids),
+        adjacent_sibling_id: List.first(adjacent_sibling_ids)
+      }
     else
       node
     end
@@ -72,7 +84,7 @@ defmodule ExCss.Markup do
       end)
       |> Enum.reject(fn (id) -> id == nil end)
 
-    %{node | child_ids: child_ids, children: children}
+    %{node | child_ids: MapSet.new(child_ids), children: children}
   end
   defp apply_child_ids_to_node(node) when is_binary(node), do: node
 
@@ -84,12 +96,12 @@ defmodule ExCss.Markup do
     descendant_ids =
       children
       |> Enum.flat_map(fn
-        (%MN{id: id, descendant_ids: descendant_ids}) -> [id] ++ descendant_ids
+        (%MN{id: id, descendant_ids: descendant_ids}) -> [id] ++ Set.to_list(descendant_ids)
         (_) -> []
       end)
       |> Enum.reject(fn (id) -> id == nil end)
 
-    %{node | descendant_ids: descendant_ids, children: children}
+    %{node | descendant_ids: MapSet.new(descendant_ids), children: children}
   end
   defp apply_descendant_ids_to_node(node) when is_binary(node), do: node
 

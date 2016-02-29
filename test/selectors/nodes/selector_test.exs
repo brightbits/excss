@@ -6,11 +6,8 @@ defmodule ExCss.Selectors.Nodes.SelectorTest do
   alias ExCss.Selectors.Nodes, as: N
   alias ExCss.Lexer.Tokens, as: T
 
-  # selector
-  #   : simple_selector_sequence [ combinator simple_selector_sequence ]*
-  #   ;
   describe ".parse" do
-    context "starts with a simple_selector" do
+    context "single simple_selector" do
       context "without a combinator" do
         it "parses correctly" do
           tokens = [

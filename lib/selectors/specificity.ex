@@ -15,10 +15,15 @@ defmodule ExCss.Selectors.Specificity do
   end
 
   defp visit_node(style_rule = %SN.StyleRule{}) do
-    %{style_rule | selector: visit_selector(style_rule.selector)}
+    %{style_rule | selector_list: visit_selector(style_rule.selector_list)}
   end
 
   defp visit_node(node), do: node
+
+  defp visit_selector(selector_list = %SN.SelectorList{}) do
+    selectors = V.visit_nodes(&visit_selector/1, selector_list.value)
+    %{selector_list | value: selectors}
+  end
 
   defp visit_selector(selector = %SN.Selector{}) do
     specificities = List.flatten(V.visit_nodes(&visit_selector/1, [selector.value]))

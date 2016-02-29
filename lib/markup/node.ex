@@ -4,9 +4,9 @@ defmodule ExCss.Markup.Node do
             children: [],
             id: nil,
             parent_id: nil,
-            child_ids: [],
-            descendant_ids: [],
-            general_sibling_ids: [],
+            child_ids: MapSet.new,
+            descendant_ids: MapSet.new,
+            general_sibling_ids: MapSet.new,
             adjacent_sibling_id: nil
 
   @t __MODULE__
